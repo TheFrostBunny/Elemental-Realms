@@ -45,6 +45,3 @@ pip install pygame
 - Implementer flere nivåer
 - Legg til lydeffekter
 - Lag en meny
-
-## Lisens
-Dette prosjektet er kun for læringsformål.
