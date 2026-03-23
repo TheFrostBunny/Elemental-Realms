@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { EnemyData, ELEMENTS } from './types';
@@ -10,7 +10,7 @@ interface EnemiesProps {
   setEnemies: React.Dispatch<React.SetStateAction<EnemyData[]>>;
 }
 
-function Enemy({ enemy, playerRef, onEnemyAttackPlayer, updateEnemy }: {
+const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer, updateEnemy }: {
   enemy: EnemyData;
   playerRef: React.MutableRefObject<THREE.Group | null>;
   onEnemyAttackPlayer: (damage: number) => void;
@@ -106,12 +106,12 @@ function Enemy({ enemy, playerRef, onEnemyAttackPlayer, updateEnemy }: {
       <pointLight color={config.glowColor} intensity={0.8} distance={4} />
     </group>
   );
-}
+});
 
-export function Enemies({ enemies, playerRef, onEnemyAttackPlayer, setEnemies }: EnemiesProps) {
-  const updateEnemy = (id: string, updates: Partial<EnemyData>) => {
+export const Enemies = React.memo(function Enemies({ enemies, playerRef, onEnemyAttackPlayer, setEnemies }: EnemiesProps) {
+  const memoUpdateEnemy = useCallback((id: string, updates: Partial<EnemyData>) => {
     setEnemies(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
-  };
+  }, [setEnemies]);
 
   return (
     <group>
@@ -121,9 +121,10 @@ export function Enemies({ enemies, playerRef, onEnemyAttackPlayer, setEnemies }:
           enemy={enemy}
           playerRef={playerRef}
           onEnemyAttackPlayer={onEnemyAttackPlayer}
-          updateEnemy={updateEnemy}
+          updateEnemy={memoUpdateEnemy}
         />
       ))}
     </group>
   );
-}
+});
+

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CollectibleData, ELEMENTS, Element } from './types';
@@ -9,7 +9,7 @@ interface CollectiblesProps {
   onCollect: (id: string) => void;
 }
 
-function Collectible({ item, playerRef, onCollect }: {
+const Collectible = React.memo(function Collectible({ item, playerRef, onCollect }: {
   item: CollectibleData;
   playerRef: React.MutableRefObject<THREE.Group | null>;
   onCollect: (id: string) => void;
@@ -58,14 +58,15 @@ function Collectible({ item, playerRef, onCollect }: {
       <pointLight color={color} intensity={0.5} distance={3} />
     </mesh>
   );
-}
+});
 
-export function Collectibles({ collectibles, playerRef, onCollect }: CollectiblesProps) {
+export const Collectibles = React.memo(function Collectibles({ collectibles, playerRef, onCollect }: CollectiblesProps) {
+  const memoOnCollect = useCallback(onCollect, [onCollect]);
   return (
     <group>
       {collectibles.map(item => (
-        <Collectible key={item.id} item={item} playerRef={playerRef} onCollect={onCollect} />
+        <Collectible key={item.id} item={item} playerRef={playerRef} onCollect={memoOnCollect} />
       ))}
     </group>
   );
-}
+});
