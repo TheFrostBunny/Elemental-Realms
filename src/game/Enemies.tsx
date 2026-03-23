@@ -8,13 +8,15 @@ interface EnemiesProps {
   playerRef: React.MutableRefObject<THREE.Group | null>;
   onEnemyAttackPlayer: (damage: number) => void;
   setEnemies: React.Dispatch<React.SetStateAction<EnemyData[]>>;
+  onAttackEnemy: (id: string) => void;
 }
 
-const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer, updateEnemy }: {
+const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer, updateEnemy, onAttackEnemy }: {
   enemy: EnemyData;
   playerRef: React.MutableRefObject<THREE.Group | null>;
   onEnemyAttackPlayer: (damage: number) => void;
   updateEnemy: (id: string, updates: Partial<EnemyData>) => void;
+  onAttackEnemy: (id: string) => void;
 }) {
   const meshRef = useRef<THREE.Group>(null);
   const config = ELEMENTS[enemy.element];
@@ -69,8 +71,15 @@ const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer,
 
   const healthPercent = enemy.health / enemy.maxHealth;
 
+  const handlePointerDown = (e: any) => {
+    e.stopPropagation();
+    if (!enemy.dead) {
+      onAttackEnemy(enemy.id);
+    }
+  };
+
   return (
-    <group ref={meshRef} position={enemy.position}>
+    <group ref={meshRef} position={enemy.position} onPointerDown={handlePointerDown}>
       {/* Body - spiky for enemies */}
       <mesh castShadow>
         <octahedronGeometry args={[0.4, 0]} />
@@ -108,7 +117,7 @@ const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer,
   );
 });
 
-export const Enemies = React.memo(function Enemies({ enemies, playerRef, onEnemyAttackPlayer, setEnemies }: EnemiesProps) {
+export const Enemies = React.memo(function Enemies({ enemies, playerRef, onEnemyAttackPlayer, setEnemies, onAttackEnemy }: EnemiesProps) {
   const memoUpdateEnemy = useCallback((id: string, updates: Partial<EnemyData>) => {
     setEnemies(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
   }, [setEnemies]);
@@ -122,6 +131,7 @@ export const Enemies = React.memo(function Enemies({ enemies, playerRef, onEnemy
           playerRef={playerRef}
           onEnemyAttackPlayer={onEnemyAttackPlayer}
           updateEnemy={memoUpdateEnemy}
+          onAttackEnemy={onAttackEnemy}
         />
       ))}
     </group>

@@ -72,7 +72,7 @@ const GameSceneComponent = ({
       <FloatingIslands currentRealm={currentRealm} />
       <RealmDecorations currentRealm={currentRealm} />
       <Portals currentRealm={currentRealm} playerRef={playerRef} onEnterRealm={onEnterRealm} />
-      <Enemies enemies={enemies} playerRef={playerRef} onEnemyAttackPlayer={onEnemyAttackPlayer} setEnemies={setEnemies} />
+      <Enemies enemies={enemies} playerRef={playerRef} onEnemyAttackPlayer={onEnemyAttackPlayer} setEnemies={setEnemies} onAttackEnemy={onAttackEnemy} />
       <Collectibles collectibles={collectibles} playerRef={playerRef} onCollect={onCollectItem} />
       <Player activeElement={activeElement} onSwitchElement={onSwitchElement} onAttack={handleAttack} playerRef={playerRef} />
 
