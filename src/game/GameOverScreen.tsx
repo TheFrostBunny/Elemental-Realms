@@ -6,7 +6,9 @@ interface GameOverScreenProps {
   onMenu: () => void;
 }
 
-export function GameOverScreen({ stats, onRestart, onMenu }: GameOverScreenProps) {
+import React from 'react';
+
+const GameOverScreenComponent = ({ stats, onRestart, onMenu }: GameOverScreenProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-md">
       <div className="flex flex-col items-center gap-8 text-center">
@@ -57,4 +59,6 @@ export function GameOverScreen({ stats, onRestart, onMenu }: GameOverScreenProps
       </div>
     </div>
   );
-}
+};
+
+export const GameOverScreen = React.memo(GameOverScreenComponent);

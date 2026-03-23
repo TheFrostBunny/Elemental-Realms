@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ELEMENTS, Element } from './types';
 
 interface MainMenuProps {
   onStart: () => void;
 }
 
-export function MainMenu({ onStart }: MainMenuProps) {
+const MainMenuComponent = ({ onStart }: MainMenuProps) => {
   const [visible, setVisible] = useState(false);
   const [hoveredEl, setHoveredEl] = useState<Element | null>(null);
 
@@ -118,4 +118,6 @@ export function MainMenu({ onStart }: MainMenuProps) {
       </div>
     </div>
   );
-}
+};
+
+export const MainMenu = React.memo(MainMenuComponent);

@@ -22,10 +22,12 @@ interface GameSceneProps {
   setEnemies: React.Dispatch<React.SetStateAction<EnemyData[]>>;
 }
 
-export function GameScene({
+import React from 'react';
+
+const GameSceneComponent = ({
   activeElement, currentRealm, enemies, collectibles,
   onSwitchElement, onAttackEnemy, onCollectItem, onEnemyAttackPlayer, onEnterRealm, setEnemies,
-}: GameSceneProps) {
+}: GameSceneProps) => {
   const playerRef = useRef<THREE.Group>(null);
   const realmConfig = REALM_CONFIGS[currentRealm];
   const elConfig = ELEMENTS[activeElement];
@@ -83,4 +85,6 @@ export function GameScene({
       />
     </Canvas>
   );
-}
+};
+
+export const GameScene = React.memo(GameSceneComponent);
