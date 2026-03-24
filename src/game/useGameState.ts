@@ -41,7 +41,10 @@ export function useGameState() {
     setHealth(100);
     setCurrentRealm('fire');
     setActiveElement('fire');
-    spawnEnemies('fire', 8).then(setEnemies);
+    spawnEnemies('fire', 8).then(enemies => {
+      console.log('WASM enemies:', enemies);
+      setEnemies(enemies);
+    });
     spawnCollectibles('fire', 6).then(setCollectibles);
     setStats({
       kills: 0, xp: 0, level: 1, xpToNext: 100, // Placeholder, will update via useEffect
@@ -59,7 +62,10 @@ export function useGameState() {
 
   const enterRealm = useCallback((realm: Realm) => {
     setCurrentRealm(realm);
-    spawnEnemies(realm, 8 + stats.level * 2).then(setEnemies);
+    spawnEnemies(realm, 8 + stats.level * 2).then(enemies => {
+      console.log('WASM enemies:', enemies);
+      setEnemies(enemies);
+    });
     spawnCollectibles(realm, 6).then(setCollectibles);
     setStats(prev => {
       if (prev.realmsVisited.includes(realm)) return prev;

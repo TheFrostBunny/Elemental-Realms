@@ -1,5 +1,6 @@
 use js_sys::{Array, Object};
 use wasm_bindgen::JsValue;
+use serde_wasm_bindgen::to_value;
 #[wasm_bindgen]
 pub fn spawn_enemies(realm: &str, count: u32) -> Array {
     let elements = ["fire", "water", "earth", "air"];
@@ -8,11 +9,11 @@ pub fn spawn_enemies(realm: &str, count: u32) -> Array {
         let angle = js_sys::Math::random() * std::f64::consts::PI * 2.0;
         let dist = 5.0 + js_sys::Math::random() * 12.0;
         let el = elements[(js_sys::Math::floor(js_sys::Math::random() * 4.0)) as usize];
-        let mut enemy = Object::new();
+        let enemy = Object::new();
         js_sys::Reflect::set(&enemy, &JsValue::from_str("id"), &JsValue::from_str(&format!("{}-enemy-{}-{}", realm, i, js_sys::Date::now())))
             .unwrap();
         js_sys::Reflect::set(&enemy, &JsValue::from_str("element"), &JsValue::from_str(el)).unwrap();
-        js_sys::Reflect::set(&enemy, &JsValue::from_str("position"), &JsValue::from_serde(&vec![angle.cos() * dist, 0.6, angle.sin() * dist]).unwrap()).unwrap();
+        js_sys::Reflect::set(&enemy, &JsValue::from_str("position"), &to_value(&vec![angle.cos() * dist, 0.6, angle.sin() * dist]).unwrap()).unwrap();
         let health = 30 + (js_sys::Math::floor(js_sys::Math::random() * 20.0) as i32);
         js_sys::Reflect::set(&enemy, &JsValue::from_str("health"), &JsValue::from_f64(health as f64)).unwrap();
         js_sys::Reflect::set(&enemy, &JsValue::from_str("maxHealth"), &JsValue::from_f64(health as f64)).unwrap();
@@ -34,12 +35,12 @@ pub fn spawn_collectibles(realm: &str, count: u32) -> Array {
     for i in 0..count {
         let angle = js_sys::Math::random() * std::f64::consts::PI * 2.0;
         let dist = 3.0 + js_sys::Math::random() * 14.0;
-        let mut item = Object::new();
+        let item = Object::new();
         js_sys::Reflect::set(&item, &JsValue::from_str("id"), &JsValue::from_str(&format!("{}-collect-{}-{}", realm, i, js_sys::Date::now())))
             .unwrap();
         js_sys::Reflect::set(&item, &JsValue::from_str("type"), &JsValue::from_str(types[(js_sys::Math::floor(js_sys::Math::random() * 3.0)) as usize])).unwrap();
         js_sys::Reflect::set(&item, &JsValue::from_str("element"), &JsValue::from_str(realm)).unwrap();
-        js_sys::Reflect::set(&item, &JsValue::from_str("position"), &JsValue::from_serde(&vec![angle.cos() * dist, 0.8 + (i as f64).sin() * 0.3, angle.sin() * dist]).unwrap()).unwrap();
+        js_sys::Reflect::set(&item, &JsValue::from_str("position"), &to_value(&vec![angle.cos() * dist, 0.8 + (i as f64).sin() * 0.3, angle.sin() * dist]).unwrap()).unwrap();
         js_sys::Reflect::set(&item, &JsValue::from_str("collected"), &JsValue::from_bool(false)).unwrap();
         arr.push(&item);
     }
