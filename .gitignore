@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# WASM build artifacts
+wasm/pkg/
+wasm/target/
+
+# Vite cache
+.vite/
+
+# Batch/cleanup scripts
+clean-all.bat
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

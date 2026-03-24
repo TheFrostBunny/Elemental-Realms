@@ -1,4 +1,5 @@
 import { Element, Realm, GameStats, ELEMENTS, REALM_CONFIGS } from './types';
+import React from 'react';
 
 interface HUDProps {
   activeElement: Element;
@@ -11,8 +12,6 @@ interface HUDProps {
   onSwitchElement: (el: Element) => void;
   onBack: () => void;
 }
-
-import React from 'react';
 
 const HUDComponent = ({
   activeElement, health, currentRealm, stats,
@@ -81,7 +80,7 @@ const HUDComponent = ({
         <div className="flex items-center gap-3 text-[10px] font-body text-muted-foreground">
           <span>⚔ {stats.kills} kills</span>
           <span>⚡ {stats.attackPower} ATK</span>
-          <span>🌍 {stats.realmsVisited.size}/4</span>
+          <span>🌍 {stats.realmsVisited.length}/4</span>
         </div>
       </div>
 

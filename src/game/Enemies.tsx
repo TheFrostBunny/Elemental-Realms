@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { EnemyData, ELEMENTS } from './types';
@@ -10,7 +10,6 @@ interface EnemiesProps {
   setEnemies: React.Dispatch<React.SetStateAction<EnemyData[]>>;
   onAttackEnemy: (id: string) => void;
 }
-
 const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer, updateEnemy, onAttackEnemy }: {
   enemy: EnemyData;
   playerRef: React.MutableRefObject<THREE.Group | null>;
@@ -21,8 +20,24 @@ const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer,
   const meshRef = useRef<THREE.Group>(null);
   const config = ELEMENTS[enemy.element];
 
+  const [ringRotation, setRingRotation] = useState(0);
+  const [deathAnim, setDeathAnim] = useState({ elapsed: 0, fade: 1 });
+
   useFrame((_, delta) => {
-    if (!meshRef.current || enemy.dead || !playerRef.current) return;
+    if (!meshRef.current || !playerRef.current) return;
+
+    // Animate ring
+    setRingRotation(r => r + delta * 1.2);
+
+    if (enemy.dead) {
+      // Death animation
+      if (enemy.deathTime) {
+        const elapsed = Date.now() - enemy.deathTime;
+        if (elapsed > 1500) return;
+        setDeathAnim({ elapsed, fade: 1 - elapsed / 1500 });
+      }
+      return;
+    }
 
     const playerPos = playerRef.current.position;
     const enemyPos = meshRef.current.position;
@@ -47,23 +62,21 @@ const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer,
     }
 
     // Bobbing
-    meshRef.current.position.y = 0.6 + Math.sin(Date.now() * 0.004 + enemy.position[0]) * 0.15;
+    meshRef.current.position.y = 0.6 + Math.sin(performance.now() * 0.004 + enemy.position[0]) * 0.15;
   });
 
   if (enemy.dead) {
     // Death particles - show briefly then remove
-    const elapsed = Date.now() - (enemy.deathTime || Date.now());
-    if (elapsed > 1500) return null;
-    const fade = 1 - elapsed / 1500;
+    if (deathAnim.elapsed > 1500) return null;
     return (
       <mesh position={enemy.position}>
-        <sphereGeometry args={[0.5 + (1 - fade) * 2, 8, 8]} />
+        <sphereGeometry args={[0.5 + (1 - deathAnim.fade) * 2, 8, 8]} />
         <meshStandardMaterial
           color={config.glowColor}
           emissive={config.glowColor}
-          emissiveIntensity={3 * fade}
+          emissiveIntensity={3 * deathAnim.fade}
           transparent
-          opacity={fade * 0.5}
+          opacity={deathAnim.fade * 0.5}
         />
       </mesh>
     );
@@ -92,7 +105,7 @@ const Enemy = React.memo(function Enemy({ enemy, playerRef, onEnemyAttackPlayer,
         />
       </mesh>
       {/* Rotating ring */}
-      <mesh rotation={[Math.PI / 4, Date.now() * 0.002, 0]}>
+      <mesh rotation={[Math.PI / 4, ringRotation, 0]}>
         <torusGeometry args={[0.6, 0.05, 8, 16]} />
         <meshStandardMaterial color={config.glowColor} emissive={config.glowColor} emissiveIntensity={1} transparent opacity={0.6} />
       </mesh>
