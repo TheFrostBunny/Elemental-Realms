@@ -37,37 +37,59 @@ export function useGameState() {
   }, []);
 
   const startGame = useCallback(() => {
+    let cancelled = false;
     setScreen('playing');
     setHealth(100);
     setCurrentRealm('fire');
     setActiveElement('fire');
-    spawnEnemies('fire', 8).then(enemies => {
-      console.log('WASM enemies:', enemies);
-      // Map WASM objects to correct EnemyData shape
+    const safeRealm = 'fire';
+    const safeEnemyCount = Math.max(1, 8);
+    const safeCollectibleCount = Math.max(1, 6);
+    console.log('[startGame] Calling spawnEnemies with', safeRealm, safeEnemyCount);
+    spawnEnemies(safeRealm, safeEnemyCount).then(enemies => {
+      if (cancelled) return;
+      console.log('[startGame] WASM enemies:', enemies);
       setEnemies(enemies.map(e => {
+        const plain = JSON.parse(JSON.stringify(e));
         const mapped = {
-          id: e.id,
-          element: typeof e.element === 'string' && ['fire','water','earth','air'].includes(e.element) ? e.element : 'fire',
-          position: Array.isArray(e.position) ? e.position : [0,0,0],
-          health: Number(e.health),
-          maxHealth: Number(e.maxHealth),
-          speed: Number(e.speed),
-          damage: Number(e.damage),
-          xpReward: Number(e.xpReward),
-          dead: Boolean(e.dead),
-          attackCooldown: Number(e.attackCooldown),
-          lastAttackTime: Number(e.lastAttackTime),
+          id: plain.id,
+          element: typeof plain.element === 'string' && ['fire','water','earth','air'].includes(plain.element) ? plain.element : 'fire',
+          position: Array.isArray(plain.position) ? plain.position : [0,0,0],
+          health: Number(plain.health),
+          maxHealth: Number(plain.maxHealth),
+          speed: Number(plain.speed),
+          damage: Number(plain.damage),
+          xpReward: Number(plain.xpReward),
+          dead: Boolean(plain.dead),
+          attackCooldown: Number(plain.attackCooldown),
+          lastAttackTime: Number(plain.lastAttackTime),
         };
-        console.log('Mapped enemy:', mapped);
+        console.log('[startGame] Mapped enemy:', mapped);
         return mapped;
       }));
     });
-    spawnCollectibles('fire', 6).then(setCollectibles);
+    console.log('[startGame] Calling spawnCollectibles with', safeRealm, safeCollectibleCount);
+    spawnCollectibles(safeRealm, safeCollectibleCount).then(collectibles => {
+      if (cancelled) return;
+      setCollectibles(collectibles.map(c => {
+        const plain = JSON.parse(JSON.stringify(c));
+        const mapped = {
+          id: plain.id,
+          type: typeof plain.type === 'string' && ['health','xp','element_shard'].includes(plain.type) ? plain.type : 'health',
+          element: typeof plain.element === 'string' && ['fire','water','earth','air'].includes(plain.element) ? plain.element : undefined,
+          position: Array.isArray(plain.position) ? plain.position : [0,0,0],
+          collected: Boolean(plain.collected),
+        };
+        console.log('[startGame] Mapped collectible:', mapped);
+        return mapped;
+      }));
+    });
     setStats({
       kills: 0, xp: 0, level: 1, xpToNext: 100, // Placeholder, will update via useEffect
       maxHealth: 100, attackPower: 20, realmsVisited: ['fire'],
     });
     showNotification('Welcome to the Ember Wastes');
+    return () => { cancelled = true; };
   }, [showNotification]);
 
   const backToMenu = useCallback(() => {
@@ -78,34 +100,57 @@ export function useGameState() {
   const switchElement = useCallback((el: Element) => setActiveElement(el), []);
 
   const enterRealm = useCallback((realm: Realm) => {
-    setCurrentRealm(realm);
-    spawnEnemies(realm, 8 + stats.level * 2).then(enemies => {
-      console.log('WASM enemies:', enemies);
+    let cancelled = false;
+    const safeRealm = ['fire','water','earth','air'].includes(realm) ? realm : 'fire';
+    const safeEnemyCount = Math.max(1, 8 + stats.level * 2);
+    const safeCollectibleCount = Math.max(1, 6);
+    setCurrentRealm(safeRealm);
+    console.log('[enterRealm] Calling spawnEnemies with', safeRealm, safeEnemyCount);
+    spawnEnemies(safeRealm, safeEnemyCount).then(enemies => {
+      if (cancelled) return;
+      console.log('[enterRealm] WASM enemies:', enemies);
       setEnemies(enemies.map(e => {
+        const plain = JSON.parse(JSON.stringify(e));
         const mapped = {
-          id: e.id,
-          element: typeof e.element === 'string' && ['fire','water','earth','air'].includes(e.element) ? e.element : 'fire',
-          position: Array.isArray(e.position) ? e.position : [0,0,0],
-          health: Number(e.health),
-          maxHealth: Number(e.maxHealth),
-          speed: Number(e.speed),
-          damage: Number(e.damage),
-          xpReward: Number(e.xpReward),
-          dead: Boolean(e.dead),
-          attackCooldown: Number(e.attackCooldown),
-          lastAttackTime: Number(e.lastAttackTime),
+          id: plain.id,
+          element: typeof plain.element === 'string' && ['fire','water','earth','air'].includes(plain.element) ? plain.element : 'fire',
+          position: Array.isArray(plain.position) ? plain.position : [0,0,0],
+          health: Number(plain.health),
+          maxHealth: Number(plain.maxHealth),
+          speed: Number(plain.speed),
+          damage: Number(plain.damage),
+          xpReward: Number(plain.xpReward),
+          dead: Boolean(plain.dead),
+          attackCooldown: Number(plain.attackCooldown),
+          lastAttackTime: Number(plain.lastAttackTime),
         };
-        console.log('Mapped enemy:', mapped);
+        console.log('[enterRealm] Mapped enemy:', mapped);
         return mapped;
       }));
     });
-    spawnCollectibles(realm, 6).then(setCollectibles);
+    console.log('[enterRealm] Calling spawnCollectibles with', safeRealm, safeCollectibleCount);
+    spawnCollectibles(safeRealm, safeCollectibleCount).then(collectibles => {
+      if (cancelled) return;
+      setCollectibles(collectibles.map(c => {
+        const plain = JSON.parse(JSON.stringify(c));
+        const mapped = {
+          id: plain.id,
+          type: typeof plain.type === 'string' && ['health','xp','element_shard'].includes(plain.type) ? plain.type : 'health',
+          element: typeof plain.element === 'string' && ['fire','water','earth','air'].includes(plain.element) ? plain.element : undefined,
+          position: Array.isArray(plain.position) ? plain.position : [0,0,0],
+          collected: Boolean(plain.collected),
+        };
+        console.log('[enterRealm] Mapped collectible:', mapped);
+        return mapped;
+      }));
+    });
     setStats(prev => {
-      if (prev.realmsVisited.includes(realm)) return prev;
-      return { ...prev, realmsVisited: [...prev.realmsVisited, realm] };
+      if (prev.realmsVisited.includes(safeRealm)) return prev;
+      return { ...prev, realmsVisited: [...prev.realmsVisited, safeRealm] };
     });
     const names = { fire: 'Ember Wastes', water: 'Tidal Depths', earth: 'Verdant Wilds', air: 'Sky Citadel' };
-    showNotification(`Entered ${names[realm]}`);
+    showNotification(`Entered ${names[safeRealm]}`);
+    return () => { cancelled = true; };
   }, [stats.level, showNotification]);
 
   const gainXp = useCallback((amount: number) => {

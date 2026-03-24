@@ -1,4 +1,5 @@
 import { Element, Realm, GameStats, ELEMENTS, REALM_CONFIGS } from './types';
+import React from 'react';
 
 interface HUDProps {
   activeElement: Element;
@@ -11,8 +12,6 @@ interface HUDProps {
   onSwitchElement: (el: Element) => void;
   onBack: () => void;
 }
-
-import React from 'react';
 
 const HUDComponent = ({
   activeElement, health, currentRealm, stats,
