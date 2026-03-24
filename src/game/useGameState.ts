@@ -43,7 +43,24 @@ export function useGameState() {
     setActiveElement('fire');
     spawnEnemies('fire', 8).then(enemies => {
       console.log('WASM enemies:', enemies);
-      setEnemies(enemies);
+      // Map WASM objects to correct EnemyData shape
+      setEnemies(enemies.map(e => {
+        const mapped = {
+          id: e.id,
+          element: typeof e.element === 'string' && ['fire','water','earth','air'].includes(e.element) ? e.element : 'fire',
+          position: Array.isArray(e.position) ? e.position : [0,0,0],
+          health: Number(e.health),
+          maxHealth: Number(e.maxHealth),
+          speed: Number(e.speed),
+          damage: Number(e.damage),
+          xpReward: Number(e.xpReward),
+          dead: Boolean(e.dead),
+          attackCooldown: Number(e.attackCooldown),
+          lastAttackTime: Number(e.lastAttackTime),
+        };
+        console.log('Mapped enemy:', mapped);
+        return mapped;
+      }));
     });
     spawnCollectibles('fire', 6).then(setCollectibles);
     setStats({
@@ -64,7 +81,23 @@ export function useGameState() {
     setCurrentRealm(realm);
     spawnEnemies(realm, 8 + stats.level * 2).then(enemies => {
       console.log('WASM enemies:', enemies);
-      setEnemies(enemies);
+      setEnemies(enemies.map(e => {
+        const mapped = {
+          id: e.id,
+          element: typeof e.element === 'string' && ['fire','water','earth','air'].includes(e.element) ? e.element : 'fire',
+          position: Array.isArray(e.position) ? e.position : [0,0,0],
+          health: Number(e.health),
+          maxHealth: Number(e.maxHealth),
+          speed: Number(e.speed),
+          damage: Number(e.damage),
+          xpReward: Number(e.xpReward),
+          dead: Boolean(e.dead),
+          attackCooldown: Number(e.attackCooldown),
+          lastAttackTime: Number(e.lastAttackTime),
+        };
+        console.log('Mapped enemy:', mapped);
+        return mapped;
+      }));
     });
     spawnCollectibles(realm, 6).then(setCollectibles);
     setStats(prev => {
