@@ -55,7 +55,7 @@ export interface GameStats {
   xpToNext: number;
   maxHealth: number;
   attackPower: number;
-  realmsVisited: Set<Realm>;
+  realmsVisited: Realm[];
 }
 
 export const REALM_CONFIGS: Record<Realm, {

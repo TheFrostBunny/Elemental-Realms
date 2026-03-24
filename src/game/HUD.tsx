@@ -81,7 +81,7 @@ const HUDComponent = ({
         <div className="flex items-center gap-3 text-[10px] font-body text-muted-foreground">
           <span>⚔ {stats.kills} kills</span>
           <span>⚡ {stats.attackPower} ATK</span>
-          <span>🌍 {stats.realmsVisited.size}/4</span>
+          <span>🌍 {stats.realmsVisited.length}/4</span>
         </div>
       </div>
 

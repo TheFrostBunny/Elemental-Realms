@@ -1,3 +1,13 @@
+export async function spawnEnemies(realm: string, count: number): Promise<any[]> {
+  const w = await loadWasm();
+  // Returns a JS array of objects
+  return Array.from(w.spawn_enemies(realm, count));
+}
+
+export async function spawnCollectibles(realm: string, count: number): Promise<any[]> {
+  const w = await loadWasm();
+  return Array.from(w.spawn_collectibles(realm, count));
+}
 // Loader for wasm-modulen bygget med wasm-pack
 // Husk å bygge wasm først: kjør build-wasm.bat i wasm-mappen
 

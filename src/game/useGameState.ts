@@ -1,49 +1,9 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Element, Realm, GameStats, EnemyData, CollectibleData, calcXpToNext, calcDamage } from './types';
+import { spawnEnemies, spawnCollectibles } from '../lib/wasm';
 
 export type GameScreen = 'menu' | 'playing' | 'gameover';
 
-function spawnEnemies(realm: Realm, count: number): EnemyData[] {
-  const enemies: EnemyData[] = [];
-  const elements: Element[] = ['fire', 'water', 'earth', 'air'];
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 5 + Math.random() * 12;
-    const el = elements[Math.floor(Math.random() * 4)];
-    enemies.push({
-      id: `${realm}-enemy-${i}-${Date.now()}`,
-      element: el,
-      position: [Math.cos(angle) * dist, 0.6, Math.sin(angle) * dist],
-      health: 30 + Math.floor(Math.random() * 20),
-      maxHealth: 50,
-      speed: 1.5 + Math.random() * 1.5,
-      damage: 8 + Math.floor(Math.random() * 7),
-      xpReward: 15 + Math.floor(Math.random() * 15),
-      dead: false,
-      attackCooldown: 1200,
-      lastAttackTime: 0,
-    });
-    enemies[enemies.length - 1].maxHealth = enemies[enemies.length - 1].health;
-  }
-  return enemies;
-}
-
-function spawnCollectibles(realm: Realm, count: number): CollectibleData[] {
-  const items: CollectibleData[] = [];
-  const types: Array<'health' | 'xp' | 'element_shard'> = ['health', 'xp', 'element_shard'];
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 3 + Math.random() * 14;
-    items.push({
-      id: `${realm}-collect-${i}-${Date.now()}`,
-      type: types[Math.floor(Math.random() * 3)],
-      element: realm,
-      position: [Math.cos(angle) * dist, 0.8 + Math.sin(i) * 0.3, Math.sin(angle) * dist],
-      collected: false,
-    });
-  }
-  return items;
-}
 
 export function useGameState() {
   const [screen, setScreen] = useState<GameScreen>('menu');
@@ -53,9 +13,20 @@ export function useGameState() {
   const [enemies, setEnemies] = useState<EnemyData[]>([]);
   const [collectibles, setCollectibles] = useState<CollectibleData[]>([]);
   const [stats, setStats] = useState<GameStats>({
-    kills: 0, xp: 0, level: 1, xpToNext: calcXpToNext(1),
-    maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire']),
+    kills: 0, xp: 0, level: 1, xpToNext: 100, // Placeholder, will update after mount
+    maxHealth: 100, attackPower: 20, realmsVisited: ['fire'],
   });
+
+  // Update xpToNext after mount and when level changes
+  useEffect(() => {
+    let cancelled = false;
+    calcXpToNext(stats.level).then(xp => {
+      if (!cancelled) {
+        setStats(prev => ({ ...prev, xpToNext: xp }));
+      }
+    });
+    return () => { cancelled = true; };
+  }, [stats.level]);
   const [damageFlash, setDamageFlash] = useState(false);
   const [levelUpFlash, setLevelUpFlash] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
@@ -70,11 +41,11 @@ export function useGameState() {
     setHealth(100);
     setCurrentRealm('fire');
     setActiveElement('fire');
-    setEnemies(spawnEnemies('fire', 8));
-    setCollectibles(spawnCollectibles('fire', 6));
+    spawnEnemies('fire', 8).then(setEnemies);
+    spawnCollectibles('fire', 6).then(setCollectibles);
     setStats({
-      kills: 0, xp: 0, level: 1, xpToNext: calcXpToNext(1),
-      maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire']),
+      kills: 0, xp: 0, level: 1, xpToNext: 100, // Placeholder, will update via useEffect
+      maxHealth: 100, attackPower: 20, realmsVisited: ['fire'],
     });
     showNotification('Welcome to the Ember Wastes');
   }, [showNotification]);
@@ -88,12 +59,11 @@ export function useGameState() {
 
   const enterRealm = useCallback((realm: Realm) => {
     setCurrentRealm(realm);
-    setEnemies(spawnEnemies(realm, 8 + stats.level * 2));
-    setCollectibles(spawnCollectibles(realm, 6));
+    spawnEnemies(realm, 8 + stats.level * 2).then(setEnemies);
+    spawnCollectibles(realm, 6).then(setCollectibles);
     setStats(prev => {
-      const visited = new Set(prev.realmsVisited);
-      visited.add(realm);
-      return { ...prev, realmsVisited: visited };
+      if (prev.realmsVisited.includes(realm)) return prev;
+      return { ...prev, realmsVisited: [...prev.realmsVisited, realm] };
     });
     const names = { fire: 'Ember Wastes', water: 'Tidal Depths', earth: 'Verdant Wilds', air: 'Sky Citadel' };
     showNotification(`Entered ${names[realm]}`);
@@ -106,19 +76,17 @@ export function useGameState() {
       let toNext = prev.xpToNext;
       let newMaxHp = prev.maxHealth;
       let newAtk = prev.attackPower;
-
+      // xpToNext will be updated by useEffect
       while (newXp >= toNext) {
         newXp -= toNext;
         newLevel++;
-        toNext = calcXpToNext(newLevel);
         newMaxHp += 15;
         newAtk += 5;
         setLevelUpFlash(true);
         setTimeout(() => setLevelUpFlash(false), 1500);
         showNotification(`Level Up! Level ${newLevel}`);
       }
-
-      return { ...prev, xp: newXp, level: newLevel, xpToNext: toNext, maxHealth: newMaxHp, attackPower: newAtk };
+      return { ...prev, xp: newXp, level: newLevel, maxHealth: newMaxHp, attackPower: newAtk };
     });
   }, [showNotification]);
 
@@ -139,17 +107,23 @@ export function useGameState() {
   }, [stats.maxHealth]);
 
   const attackEnemy = useCallback((enemyId: string) => {
-    setEnemies(prev => prev.map(e => {
-      if (e.id !== enemyId || e.dead) return e;
-      const dmg = calcDamage(stats.attackPower, activeElement, e.element);
-      const newHp = e.health - dmg;
-      if (newHp <= 0) {
-        gainXp(e.xpReward);
-        setStats(s => ({ ...s, kills: s.kills + 1 }));
-        return { ...e, health: 0, dead: true, deathTime: Date.now() };
-      }
-      return { ...e, health: newHp };
-    }));
+    setEnemies(prev => {
+      prev.forEach(async (e) => {
+        if (e.id !== enemyId || e.dead) return;
+        const dmg = await calcDamage(stats.attackPower, activeElement, e.element);
+        setEnemies(innerPrev => innerPrev.map(innerE => {
+          if (innerE.id !== enemyId || innerE.dead) return innerE;
+          const newHp = innerE.health - dmg;
+          if (newHp <= 0) {
+            gainXp(innerE.xpReward);
+            setStats(s => ({ ...s, kills: s.kills + 1 }));
+            return { ...innerE, health: 0, dead: true, deathTime: Date.now() };
+          }
+          return { ...innerE, health: newHp };
+        }));
+      });
+      return prev;
+    });
   }, [stats.attackPower, activeElement, gainXp]);
 
   const collectItem = useCallback((itemId: string) => {
