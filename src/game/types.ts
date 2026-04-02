@@ -55,7 +55,7 @@ export interface GameStats {
   xpToNext: number;
   maxHealth: number;
   attackPower: number;
-  realmsVisited: Realm[];
+  realmsVisited: Set<Realm>;
 }
 
 export const REALM_CONFIGS: Record<Realm, {
@@ -71,13 +71,14 @@ export const REALM_CONFIGS: Record<Realm, {
   air: { name: 'Sky Citadel', groundColor: '#1a2a3d', fogColor: '#0a0f1a', ambientColor: '#202830', skyColor: '#0a0f15' },
 };
 
-// Bruk wasm-modulen i stedet for JS-implementasjon
-import { calcXpToNext as wasmCalcXpToNext, calcDamage as wasmCalcDamage } from '../lib/wasm';
-
-export async function calcXpToNext(level: number): Promise<number> {
-  return wasmCalcXpToNext(level);
+export function calcXpToNext(level: number): number {
+  return Math.floor(80 * Math.pow(1.4, level - 1));
 }
 
-export async function calcDamage(attackPower: number, attackerElement: Element, defenderElement: Element): Promise<number> {
-  return wasmCalcDamage(attackPower, attackerElement, defenderElement);
+export function calcDamage(attackPower: number, attackerElement: Element, defenderElement: Element): number {
+  const config = ELEMENTS[attackerElement];
+  let multiplier = 1;
+  if (config.strength === defenderElement) multiplier = 2;
+  if (config.weakness === defenderElement) multiplier = 0.5;
+  return Math.floor(attackPower * multiplier);
 }

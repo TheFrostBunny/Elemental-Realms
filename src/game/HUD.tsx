@@ -1,5 +1,4 @@
 import { Element, Realm, GameStats, ELEMENTS, REALM_CONFIGS } from './types';
-import React from 'react';
 
 interface HUDProps {
   activeElement: Element;
@@ -13,11 +12,11 @@ interface HUDProps {
   onBack: () => void;
 }
 
-const HUDComponent = ({
+export function HUD({
   activeElement, health, currentRealm, stats,
   damageFlash, levelUpFlash, notification,
   onSwitchElement, onBack,
-}: HUDProps) => {
+}: HUDProps) {
   const elements: Element[] = ['fire', 'water', 'earth', 'air'];
   const realmConfig = REALM_CONFIGS[currentRealm];
   const xpPercent = (stats.xp / stats.xpToNext) * 100;
@@ -80,7 +79,7 @@ const HUDComponent = ({
         <div className="flex items-center gap-3 text-[10px] font-body text-muted-foreground">
           <span>⚔ {stats.kills} kills</span>
           <span>⚡ {stats.attackPower} ATK</span>
-          <span>🌍 {stats.realmsVisited.length}/4</span>
+          <span>🌍 {stats.realmsVisited.size}/4</span>
         </div>
       </div>
 
@@ -146,6 +145,4 @@ const HUDComponent = ({
       </div>
     </div>
   );
-};
-
-export const HUD = React.memo(HUDComponent);
+}
