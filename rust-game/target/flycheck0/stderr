@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-   0.130316900s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint error for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
-   0.131615300s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\elemental-realms-9f0d47dcf962e784\lib-elemental_realms`
-=======
-   0.041399100s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint error for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
-   0.042012200s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\elemental-realms-9f0d47dcf962e784\lib-elemental_realms`
->>>>>>> main
+   0.055877600s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint error for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
+   0.055977400s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\elemental-realms-9f0d47dcf962e784\lib-elemental_realms`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -32,13 +26,8 @@ Stack backtrace:
   18: git_midx_writer_dump
   19: BaseThreadInitThunk
   20: RtlUserThreadStart
-<<<<<<< HEAD
-   0.170622700s  INFO prepare_target{force=false package_id=getrandom v0.2.17 target="getrandom"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.2.17/Check { test: false }/TargetInner { ..: lib_target("getrandom", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\getrandom-0.2.17\\src\\lib.rs", Edition2018) }
-   0.170695500s  INFO prepare_target{force=false package_id=getrandom v0.2.17 target="getrandom"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\getrandom-3b681954c357cc7c\lib-getrandom`
-=======
-   0.055856100s  INFO prepare_target{force=false package_id=getrandom v0.2.17 target="getrandom"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.2.17/Check { test: false }/TargetInner { ..: lib_target("getrandom", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\getrandom-0.2.17\\src\\lib.rs", Edition2018) }
-   0.055909600s  INFO prepare_target{force=false package_id=getrandom v0.2.17 target="getrandom"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\getrandom-3b681954c357cc7c\lib-getrandom`
->>>>>>> main
+   0.075089700s  INFO prepare_target{force=false package_id=getrandom v0.2.17 target="getrandom"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.2.17/Check { test: false }/TargetInner { ..: lib_target("getrandom", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\getrandom-0.2.17\\src\\lib.rs", Edition2018) }
+   0.075131500s  INFO prepare_target{force=false package_id=getrandom v0.2.17 target="getrandom"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\getrandom-3b681954c357cc7c\lib-getrandom`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -66,13 +55,8 @@ Stack backtrace:
   19: git_midx_writer_dump
   20: BaseThreadInitThunk
   21: RtlUserThreadStart
-<<<<<<< HEAD
-   0.172484600s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint: fingerprint error for cfg-if v1.0.4/Check { test: false }/TargetInner { ..: lib_target("cfg_if", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\cfg-if-1.0.4\\src\\lib.rs", Edition2018) }
-   0.172554400s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\cfg-if-3dcb42ca3a02dcb5\lib-cfg_if`
-=======
-   0.056700500s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint: fingerprint error for cfg-if v1.0.4/Check { test: false }/TargetInner { ..: lib_target("cfg_if", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\cfg-if-1.0.4\\src\\lib.rs", Edition2018) }
-   0.056733200s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\cfg-if-3dcb42ca3a02dcb5\lib-cfg_if`
->>>>>>> main
+   0.075938500s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint: fingerprint error for cfg-if v1.0.4/Check { test: false }/TargetInner { ..: lib_target("cfg_if", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\cfg-if-1.0.4\\src\\lib.rs", Edition2018) }
+   0.075968800s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\cfg-if-3dcb42ca3a02dcb5\lib-cfg_if`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -101,13 +85,8 @@ Stack backtrace:
   20: git_midx_writer_dump
   21: BaseThreadInitThunk
   22: RtlUserThreadStart
-<<<<<<< HEAD
-   0.174592000s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint: fingerprint error for js-sys v0.3.91/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("js_sys", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\js-sys-0.3.91\\src\\lib.rs", Edition2021) }
-   0.174672900s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\js-sys-3e43cb04a9c19cac\lib-js_sys`
-=======
-   0.057499100s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint: fingerprint error for js-sys v0.3.91/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("js_sys", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\js-sys-0.3.91\\src\\lib.rs", Edition2021) }
-   0.057523500s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\js-sys-3e43cb04a9c19cac\lib-js_sys`
->>>>>>> main
+   0.076737500s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint: fingerprint error for js-sys v0.3.91/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("js_sys", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\js-sys-0.3.91\\src\\lib.rs", Edition2021) }
+   0.076767700s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\js-sys-3e43cb04a9c19cac\lib-js_sys`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -135,13 +114,8 @@ Stack backtrace:
   19: git_midx_writer_dump
   20: BaseThreadInitThunk
   21: RtlUserThreadStart
-<<<<<<< HEAD
-   0.176583100s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.4/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\once_cell-1.21.4\\src\\lib.rs", Edition2021) }
-   0.176646900s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\once_cell-4c09f6ea2719d49f\lib-once_cell`
-=======
-   0.058067500s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.4/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\once_cell-1.21.4\\src\\lib.rs", Edition2021) }
-   0.058086800s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\once_cell-4c09f6ea2719d49f\lib-once_cell`
->>>>>>> main
+   0.077552700s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.4/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\once_cell-1.21.4\\src\\lib.rs", Edition2021) }
+   0.077581800s  INFO prepare_target{force=false package_id=once_cell v1.21.4 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\once_cell-4c09f6ea2719d49f\lib-once_cell`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -170,13 +144,8 @@ Stack backtrace:
   20: git_midx_writer_dump
   21: BaseThreadInitThunk
   22: RtlUserThreadStart
-<<<<<<< HEAD
-   0.178370000s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint error for wasm-bindgen v0.2.114/Check { test: false }/TargetInner { tested: false, ..: lib_target("wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-0.2.114\\src\\lib.rs", Edition2021) }
-   0.178436900s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\wasm-bindgen-4af02af5d11fdc1d\lib-wasm_bindgen`
-=======
-   0.058948600s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint error for wasm-bindgen v0.2.114/Check { test: false }/TargetInner { tested: false, ..: lib_target("wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-0.2.114\\src\\lib.rs", Edition2021) }
-   0.058974600s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\wasm-bindgen-4af02af5d11fdc1d\lib-wasm_bindgen`
->>>>>>> main
+   0.078383100s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint error for wasm-bindgen v0.2.114/Check { test: false }/TargetInner { tested: false, ..: lib_target("wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-0.2.114\\src\\lib.rs", Edition2021) }
+   0.078412800s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\wasm-bindgen-4af02af5d11fdc1d\lib-wasm_bindgen`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -205,13 +174,8 @@ Stack backtrace:
   20: git_midx_writer_dump
   21: BaseThreadInitThunk
   22: RtlUserThreadStart
-<<<<<<< HEAD
-   0.204177300s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint: fingerprint error for wasm-bindgen-shared v0.2.114/Check { test: false }/TargetInner { ..: lib_target("wasm_bindgen_shared", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\src\\lib.rs", Edition2021) }
-   0.204257200s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\wasm-bindgen-shared-5b94bf091ad8e01b\lib-wasm_bindgen_shared`
-=======
-   0.064854200s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint: fingerprint error for wasm-bindgen-shared v0.2.114/Check { test: false }/TargetInner { ..: lib_target("wasm_bindgen_shared", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\src\\lib.rs", Edition2021) }
-   0.064883900s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\wasm-bindgen-shared-5b94bf091ad8e01b\lib-wasm_bindgen_shared`
->>>>>>> main
+   0.128446700s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint: fingerprint error for wasm-bindgen-shared v0.2.114/Check { test: false }/TargetInner { ..: lib_target("wasm_bindgen_shared", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\src\\lib.rs", Edition2021) }
+   0.128504500s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\wasm-bindgen-shared-5b94bf091ad8e01b\lib-wasm_bindgen_shared`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -241,13 +205,8 @@ Stack backtrace:
   21: git_midx_writer_dump
   22: BaseThreadInitThunk
   23: RtlUserThreadStart
-<<<<<<< HEAD
-   0.206430000s  INFO prepare_target{force=false package_id=unicode-ident v1.0.24 target="unicode_ident"}: cargo::core::compiler::fingerprint: fingerprint error for unicode-ident v1.0.24/Check { test: false }/TargetInner { ..: lib_target("unicode_ident", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\unicode-ident-1.0.24\\src\\lib.rs", Edition2021) }
-   0.206514200s  INFO prepare_target{force=false package_id=unicode-ident v1.0.24 target="unicode_ident"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\unicode-ident-f52b723eadefb8a9\lib-unicode_ident`
-=======
-   0.065684000s  INFO prepare_target{force=false package_id=unicode-ident v1.0.24 target="unicode_ident"}: cargo::core::compiler::fingerprint: fingerprint error for unicode-ident v1.0.24/Check { test: false }/TargetInner { ..: lib_target("unicode_ident", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\unicode-ident-1.0.24\\src\\lib.rs", Edition2021) }
-   0.065705800s  INFO prepare_target{force=false package_id=unicode-ident v1.0.24 target="unicode_ident"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\unicode-ident-f52b723eadefb8a9\lib-unicode_ident`
->>>>>>> main
+   0.129707600s  INFO prepare_target{force=false package_id=unicode-ident v1.0.24 target="unicode_ident"}: cargo::core::compiler::fingerprint: fingerprint error for unicode-ident v1.0.24/Check { test: false }/TargetInner { ..: lib_target("unicode_ident", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\unicode-ident-1.0.24\\src\\lib.rs", Edition2021) }
+   0.129747800s  INFO prepare_target{force=false package_id=unicode-ident v1.0.24 target="unicode_ident"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\unicode-ident-f52b723eadefb8a9\lib-unicode_ident`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -278,13 +237,8 @@ Stack backtrace:
   22: git_midx_writer_dump
   23: BaseThreadInitThunk
   24: RtlUserThreadStart
-<<<<<<< HEAD
-   0.208760500s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint error for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-1.0.228\\src\\lib.rs", Edition2021) }
-   0.208836200s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde-181c8bea7646f97d\lib-serde`
-=======
-   0.066655300s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint error for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-1.0.228\\src\\lib.rs", Edition2021) }
-   0.066681300s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde-181c8bea7646f97d\lib-serde`
->>>>>>> main
+   0.130763800s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint error for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-1.0.228\\src\\lib.rs", Edition2021) }
+   0.130798300s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde-181c8bea7646f97d\lib-serde`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -312,13 +266,8 @@ Stack backtrace:
   19: git_midx_writer_dump
   20: BaseThreadInitThunk
   21: RtlUserThreadStart
-<<<<<<< HEAD
-   0.213624000s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint error for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_core-1.0.228\\src\\lib.rs", Edition2021) }
-   0.213695300s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde_core-41c4da796a7ac8f6\lib-serde_core`
-=======
-   0.068096200s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint error for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_core-1.0.228\\src\\lib.rs", Edition2021) }
-   0.068117900s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde_core-41c4da796a7ac8f6\lib-serde_core`
->>>>>>> main
+   0.133193500s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint error for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_core-1.0.228\\src\\lib.rs", Edition2021) }
+   0.133233800s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde_core-41c4da796a7ac8f6\lib-serde_core`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -347,13 +296,8 @@ Stack backtrace:
   20: git_midx_writer_dump
   21: BaseThreadInitThunk
   22: RtlUserThreadStart
-<<<<<<< HEAD
-   0.219104200s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint error for serde-wasm-bindgen v0.6.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("serde_wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-wasm-bindgen-0.6.5\\src\\lib.rs", Edition2018) }
-   0.219184500s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde-wasm-bindgen-c633d0f1c0cbbae8\lib-serde_wasm_bindgen`
-=======
-   0.069672300s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint error for serde-wasm-bindgen v0.6.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("serde_wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-wasm-bindgen-0.6.5\\src\\lib.rs", Edition2018) }
-   0.069696300s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde-wasm-bindgen-c633d0f1c0cbbae8\lib-serde_wasm_bindgen`
->>>>>>> main
+   0.136564600s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint error for serde-wasm-bindgen v0.6.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("serde_wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-wasm-bindgen-0.6.5\\src\\lib.rs", Edition2018) }
+   0.136623600s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\serde-wasm-bindgen-c633d0f1c0cbbae8\lib-serde_wasm_bindgen`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -381,13 +325,8 @@ Stack backtrace:
   19: git_midx_writer_dump
   20: BaseThreadInitThunk
   21: RtlUserThreadStart
-<<<<<<< HEAD
-   0.221646200s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint error for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
-   0.221728900s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\elemental-realms-940245be6e3acc96\test-lib-elemental_realms`
-=======
-   0.070309600s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint error for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
-   0.070330500s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\elemental-realms-940245be6e3acc96\test-lib-elemental_realms`
->>>>>>> main
+   0.138172500s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint error for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
+   0.138217400s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\David\Desktop\Elemental-Realms\rust-game\target\debug\.fingerprint\elemental-realms-940245be6e3acc96\test-lib-elemental_realms`
 
 Caused by:
     Systemet finner ikke angitt fil. (os error 2)
@@ -421,92 +360,8 @@ Stack backtrace:
     Checking getrandom v0.2.17
     Checking wasm-bindgen-shared v0.2.114
     Checking wasm-bindgen v0.2.114
-<<<<<<< HEAD
-=======
-   0.092365700s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint dirty for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
-   0.092507800s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(27) }
-   0.098251500s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint: fingerprint dirty for js-sys v0.3.91/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("js_sys", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\js-sys-0.3.91\\src\\lib.rs", Edition2021) }
-   0.098325200s  INFO prepare_target{force=false package_id=js-sys v0.3.91 target="js_sys"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(27) }
-   0.102970500s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen v0.2.114/Check { test: false }/TargetInner { tested: false, ..: lib_target("wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-0.2.114\\src\\lib.rs", Edition2021) }
-   0.103041700s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="wasm_bindgen"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(30) }
-   0.108337400s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen v0.2.114/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-0.2.114\\build.rs", Edition2021) }
-   0.108410000s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: LocalFingerprintTypeChanged { old: "rerun-if-changed", new: "precalculated" }
-   0.109692700s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen v0.2.114/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-0.2.114\\build.rs", Edition2021) }
-   0.109744200s  INFO prepare_target{force=false package_id=wasm-bindgen v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(13) }
-   0.111545900s  INFO prepare_target{force=false package_id=rustversion v1.0.22 target="rustversion"}: cargo::core::compiler::fingerprint: fingerprint dirty for rustversion v1.0.22/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("rustversion", ["proc-macro"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rustversion-1.0.22\\src\\lib.rs", Edition2018) }
-   0.111599000s  INFO prepare_target{force=false package_id=rustversion v1.0.22 target="rustversion"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(14) }
-   0.135685100s  INFO prepare_target{force=false package_id=rustversion v1.0.22 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for rustversion v1.0.22/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rustversion-1.0.22\\build\\build.rs", Edition2018) }
-   0.135757700s  INFO prepare_target{force=false package_id=rustversion v1.0.22 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: LocalFingerprintTypeChanged { old: "rerun-if-changed", new: "precalculated" }
-   0.158671300s  INFO prepare_target{force=false package_id=rustversion v1.0.22 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for rustversion v1.0.22/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rustversion-1.0.22\\build\\build.rs", Edition2018) }
-   0.158740900s  INFO prepare_target{force=false package_id=rustversion v1.0.22 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\rustversion-060bb69dfa1c987d\\build_script_build-060bb69dfa1c987d.exe" }))
-   0.181601000s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen-shared v0.2.114/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\build.rs", Edition2021) }
-   0.181673400s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\wasm-bindgen-shared-7c95c8b31a38b3dd\\output" }))
-   0.200642600s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen-shared v0.2.114/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\build.rs", Edition2021) }
-   0.200710600s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\wasm-bindgen-shared-5aa02b402b7d8dda\\build_script_build-5aa02b402b7d8dda.exe" }))
-   0.205115800s  INFO prepare_target{force=false package_id=wasm-bindgen-macro v0.2.114 target="wasm_bindgen_macro"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen-macro v0.2.114/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("wasm_bindgen_macro", ["proc-macro"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-macro-0.2.114\\src\\lib.rs", Edition2021) }
-   0.205270700s  INFO prepare_target{force=false package_id=wasm-bindgen-macro v0.2.114 target="wasm_bindgen_macro"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(31) }
-   0.208594300s  INFO prepare_target{force=false package_id=quote v1.0.45 target="quote"}: cargo::core::compiler::fingerprint: fingerprint dirty for quote v1.0.45/Build/TargetInner { ..: lib_target("quote", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\quote-1.0.45\\src\\lib.rs", Edition2021) }
-   0.208692000s  INFO prepare_target{force=false package_id=quote v1.0.45 target="quote"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(7) }
-   0.210565800s  INFO prepare_target{force=false package_id=proc-macro2 v1.0.106 target="proc_macro2"}: cargo::core::compiler::fingerprint: fingerprint dirty for proc-macro2 v1.0.106/Build/TargetInner { ..: lib_target("proc_macro2", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\proc-macro2-1.0.106\\src\\lib.rs", Edition2021) }
-   0.210685300s  INFO prepare_target{force=false package_id=proc-macro2 v1.0.106 target="proc_macro2"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(8) }
-   0.231527400s  INFO prepare_target{force=false package_id=proc-macro2 v1.0.106 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for proc-macro2 v1.0.106/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\proc-macro2-1.0.106\\build.rs", Edition2021) }
-   0.231609700s  INFO prepare_target{force=false package_id=proc-macro2 v1.0.106 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: LocalLengthsChanged
-   0.254013400s  INFO prepare_target{force=false package_id=proc-macro2 v1.0.106 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for proc-macro2 v1.0.106/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\proc-macro2-1.0.106\\build.rs", Edition2021) }
-   0.254136100s  INFO prepare_target{force=false package_id=proc-macro2 v1.0.106 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\proc-macro2-9140ae78e5aa91e0\\build_script_build-9140ae78e5aa91e0.exe" }))
-   0.260029400s  INFO prepare_target{force=false package_id=quote v1.0.45 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for quote v1.0.45/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\quote-1.0.45\\build.rs", Edition2021) }
-   0.260084200s  INFO prepare_target{force=false package_id=quote v1.0.45 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: LocalFingerprintTypeChanged { old: "rerun-if-changed", new: "precalculated" }
-   0.279544500s  INFO prepare_target{force=false package_id=quote v1.0.45 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for quote v1.0.45/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\quote-1.0.45\\build.rs", Edition2021) }
-   0.279618300s  INFO prepare_target{force=false package_id=quote v1.0.45 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\quote-435fa7b2c1d63305\\build_script_build-435fa7b2c1d63305.exe" }))
-   0.284272300s  INFO prepare_target{force=false package_id=wasm-bindgen-macro-support v0.2.114 target="wasm_bindgen_macro_support"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen-macro-support v0.2.114/Build/TargetInner { ..: lib_target("wasm_bindgen_macro_support", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-macro-support-0.2.114\\src\\lib.rs", Edition2021) }
-   0.284342900s  INFO prepare_target{force=false package_id=wasm-bindgen-macro-support v0.2.114 target="wasm_bindgen_macro_support"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(7) }
-   0.287712100s  INFO prepare_target{force=false package_id=syn v2.0.117 target="syn"}: cargo::core::compiler::fingerprint: fingerprint dirty for syn v2.0.117/Build/TargetInner { ..: lib_target("syn", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\syn-2.0.117\\src\\lib.rs", Edition2021) }
-   0.287772600s  INFO prepare_target{force=false package_id=syn v2.0.117 target="syn"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(7) }
-   0.307548700s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen-shared v0.2.114/Build/TargetInner { ..: lib_target("wasm_bindgen_shared", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\src\\lib.rs", Edition2021) }
-   0.307625600s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDepFingerprint { unit: UnitIndex(35) })
-   0.327848700s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint: fingerprint dirty for wasm-bindgen-shared v0.2.114/Check { test: false }/TargetInner { ..: lib_target("wasm_bindgen_shared", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\wasm-bindgen-shared-0.2.114\\src\\lib.rs", Edition2021) }
-   0.327926000s  INFO prepare_target{force=false package_id=wasm-bindgen-shared v0.2.114 target="wasm_bindgen_shared"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDepFingerprint { unit: UnitIndex(35) })
-   0.329783200s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-1.0.228\\src\\lib.rs", Edition2021) }
-   0.329821800s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(23) }
-   0.356516900s  INFO prepare_target{force=false package_id=serde v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde v1.0.228/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-1.0.228\\build.rs", Edition2021) }
-   0.356579400s  INFO prepare_target{force=false package_id=serde v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: LocalFingerprintTypeChanged { old: "rerun-if-changed", new: "precalculated" }
-   0.376616100s  INFO prepare_target{force=false package_id=serde v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde v1.0.228/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-1.0.228\\build.rs", Edition2021) }
-   0.376684100s  INFO prepare_target{force=false package_id=serde v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\serde-5c8f9baa5cb62b21\\build_script_build-5c8f9baa5cb62b21.exe" }))
-   0.378415400s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_core-1.0.228\\src\\lib.rs", Edition2021) }
-   0.378470500s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(22) }
-   0.382810700s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde_core v1.0.228/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_core-1.0.228\\build.rs", Edition2021) }
-   0.382874900s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: LocalFingerprintTypeChanged { old: "rerun-if-changed", new: "precalculated" }
-   0.401878100s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde_core v1.0.228/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_core-1.0.228\\build.rs", Edition2021) }
-   0.401948200s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(FailedToReadMetadata { path: "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\target\\debug\\build\\serde_core-a174d9b7f022b44e\\build_script_build-a174d9b7f022b44e.exe" }))
-   0.404098100s  INFO prepare_target{force=false package_id=serde_derive v1.0.228 target="serde_derive"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde_derive v1.0.228/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("serde_derive", ["proc-macro"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_derive-1.0.228\\src\\lib.rs", Edition2021) }
-   0.404163500s  INFO prepare_target{force=false package_id=serde_derive v1.0.228 target="serde_derive"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(7) }
-   0.408502200s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint: fingerprint dirty for serde-wasm-bindgen v0.6.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("serde_wasm_bindgen", ["lib"], "C:\\Users\\David\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde-wasm-bindgen-0.6.5\\src\\lib.rs", Edition2018) }
-   0.408567500s  INFO prepare_target{force=false package_id=serde-wasm-bindgen v0.6.5 target="serde_wasm_bindgen"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(27) }
-   0.412694600s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint: fingerprint dirty for elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("elemental_realms", ["cdylib", "rlib"], "C:\\Users\\David\\Desktop\\Elemental-Realms\\rust-game\\src\\lib.rs", Edition2021) }
-   0.412752000s  INFO prepare_target{force=false package_id=elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game) target="elemental_realms"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(27) }
-   Compiling proc-macro2 v1.0.106
-   Compiling quote v1.0.45
-   Compiling wasm-bindgen-shared v0.2.114
-   Compiling rustversion v1.0.22
-   Compiling serde_core v1.0.228
-   Compiling serde v1.0.228
-   Compiling wasm-bindgen v0.2.114
-   Compiling syn v2.0.117
-   Compiling wasm-bindgen-macro-support v0.2.114
-   Compiling serde_derive v1.0.228
-   Compiling wasm-bindgen-macro v0.2.114
->>>>>>> Stashed changes
-    Checking js-sys v0.3.91
-    Checking serde-wasm-bindgen v0.6.5
-    Checking elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)
-<<<<<<< Updated upstream
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 16.48s
-=======
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 31.65s
->>>>>>> Stashed changes
-=======
     Checking js-sys v0.3.91
     Checking serde v1.0.228
     Checking serde-wasm-bindgen v0.6.5
     Checking elemental-realms v0.1.0 (C:\Users\David\Desktop\Elemental-Realms\rust-game)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.58s
->>>>>>> main
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 17.84s

@@ -10,10 +10,7 @@ const Index = () => {
     screen, activeElement, health, currentRealm, stats,
     damageFlash, levelUpFlash, notification,
     startGame, backToMenu, wasmStateRef, tickGame,
-<<<<<<< HEAD
     combatHud, combatRef,
-=======
->>>>>>> main
   } = useGameState();
 
   if (screen === 'menu') {
