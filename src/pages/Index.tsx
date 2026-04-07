@@ -43,10 +43,7 @@ const Index = () => {
         currentRealm={currentRealm}
         wasmStateRef={wasmStateRef}
         tickGame={tickGame}
-<<<<<<< HEAD
         combatRef={combatRef}
-=======
->>>>>>> main
       />
       <HUD
         activeElement={activeElement}
