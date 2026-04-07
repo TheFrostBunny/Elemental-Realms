@@ -5,7 +5,7 @@
   "identifier": "com.tauri.dev",
   "build": {
     "frontendDist": "../build",
-    "devUrl": "http://localhost:3000",
+    "devUrl": "http://localhost:8080",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },
@@ -27,7 +27,7 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/favicon.svg"
+      "icons/icon.ico"
     ]
   }
 }
