@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Rust / Wasm build artifacts
+rust-game/target/
+rust-game/pkg/
+public/wasm/*.wasm
+
+# Temporary imported audio files
+public/audio/inbox/*.mp3
