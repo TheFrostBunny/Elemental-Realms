@@ -1,171 +1,187 @@
-import { useState, useCallback, useRef } from 'react';
-import { Element, Realm, GameStats, EnemyData, CollectibleData, calcXpToNext, calcDamage } from './types';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { Element, Realm, GameStats } from './types';
+import {
+  initializeWasm, isWasmReady, wasmInitGame, wasmSwitchElement,
+  wasmMovePlayer, wasmPlayerAttack, wasmTick, wasmGetState, wasmDrainEvents,
+  WasmGameState, GameEvent,
+} from './wasmBridge';
 
-export type GameScreen = 'menu' | 'playing' | 'gameover';
+export type GameScreen = 'menu' | 'playing' | 'gameover' | 'loading';
 
-function spawnEnemies(realm: Realm, count: number): EnemyData[] {
-  const enemies: EnemyData[] = [];
-  const elements: Element[] = ['fire', 'water', 'earth', 'air'];
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 5 + Math.random() * 12;
-    const el = elements[Math.floor(Math.random() * 4)];
-    enemies.push({
-      id: `${realm}-enemy-${i}-${Date.now()}`,
-      element: el,
-      position: [Math.cos(angle) * dist, 0.6, Math.sin(angle) * dist],
-      health: 30 + Math.floor(Math.random() * 20),
-      maxHealth: 50,
-      speed: 1.5 + Math.random() * 1.5,
-      damage: 8 + Math.floor(Math.random() * 7),
-      xpReward: 15 + Math.floor(Math.random() * 15),
-      dead: false,
-      attackCooldown: 1200,
-      lastAttackTime: 0,
-    });
-    enemies[enemies.length - 1].maxHealth = enemies[enemies.length - 1].health;
-  }
-  return enemies;
-}
-
-function spawnCollectibles(realm: Realm, count: number): CollectibleData[] {
-  const items: CollectibleData[] = [];
-  const types: Array<'health' | 'xp' | 'element_shard'> = ['health', 'xp', 'element_shard'];
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 3 + Math.random() * 14;
-    items.push({
-      id: `${realm}-collect-${i}-${Date.now()}`,
-      type: types[Math.floor(Math.random() * 3)],
-      element: realm,
-      position: [Math.cos(angle) * dist, 0.8 + Math.sin(i) * 0.3, Math.sin(angle) * dist],
-      collected: false,
-    });
-  }
-  return items;
-}
+// Global keyboard state – shared with GameWorld via ref
+export const keys: Record<string, boolean> = {};
 
 export function useGameState() {
   const [screen, setScreen] = useState<GameScreen>('menu');
-  const [activeElement, setActiveElement] = useState<Element>('fire');
-  const [health, setHealth] = useState(100);
-  const [currentRealm, setCurrentRealm] = useState<Realm>('fire');
-  const [enemies, setEnemies] = useState<EnemyData[]>([]);
-  const [collectibles, setCollectibles] = useState<CollectibleData[]>([]);
-  const [stats, setStats] = useState<GameStats>({
-    kills: 0, xp: 0, level: 1, xpToNext: calcXpToNext(1),
-    maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire']),
-  });
   const [damageFlash, setDamageFlash] = useState(false);
   const [levelUpFlash, setLevelUpFlash] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
-  const showNotification = useCallback((msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 2000);
+  const [hudState, setHudState] = useState<{
+    activeElement: Element;
+    health: number;
+    currentRealm: Realm;
+    stats: GameStats;
+  }>({
+    activeElement: 'fire',
+    health: 100,
+    currentRealm: 'fire',
+    stats: { kills: 0, xp: 0, level: 1, xpToNext: 80, maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire'] as Realm[]) },
+  });
+
+  const wasmStateRef = useRef<WasmGameState | null>(null);
+  const screenRef = useRef<GameScreen>('menu');
+  const attackCooldownRef = useRef(false);
+  const hudTickRef = useRef(0);
+  const setHudStateRef = useRef(setHudState);
+  setHudStateRef.current = setHudState;
+  screenRef.current = screen;
+
+  // Keyboard listeners
+  useEffect(() => {
+    const onDown = (e: KeyboardEvent) => {
+      keys[e.key.toLowerCase()] = true;
+      if (e.key === ' ') e.preventDefault();
+    };
+    const onUp = (e: KeyboardEvent) => {
+      keys[e.key.toLowerCase()] = false;
+    };
+    window.addEventListener('keydown', onDown);
+    window.addEventListener('keyup', onUp);
+    return () => {
+      window.removeEventListener('keydown', onDown);
+      window.removeEventListener('keyup', onUp);
+    };
   }, []);
 
-  const startGame = useCallback(() => {
-    setScreen('playing');
-    setHealth(100);
-    setCurrentRealm('fire');
-    setActiveElement('fire');
-    setEnemies(spawnEnemies('fire', 8));
-    setCollectibles(spawnCollectibles('fire', 6));
-    setStats({
-      kills: 0, xp: 0, level: 1, xpToNext: calcXpToNext(1),
-      maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire']),
+  const processEvents = useCallback((events: GameEvent[]) => {
+    for (const e of events) {
+      switch (e.type) {
+        case 'DamageFlash':
+          setDamageFlash(true);
+          setTimeout(() => setDamageFlash(false), 300);
+          break;
+        case 'LevelUp':
+          setLevelUpFlash(true);
+          setTimeout(() => setLevelUpFlash(false), 1500);
+          setNotification(`Level Up! Level ${e.level}`);
+          setTimeout(() => setNotification(null), 2000);
+          break;
+        case 'Notification':
+          setNotification(e.msg || null);
+          setTimeout(() => setNotification(null), 2000);
+          break;
+        case 'GameOver':
+          setTimeout(() => setScreen('gameover'), 500);
+          break;
+      }
+    }
+  }, []);
+
+  // This function is called from GameWorld's useFrame (inside R3F)
+  const tickGame = useCallback((delta: number) => {
+    if (screenRef.current !== 'playing') return;
+
+    // Read keyboard and move player
+    let dx = 0, dz = 0;
+    if (keys['w'] || keys['arrowup']) dz -= 1;
+    if (keys['s'] || keys['arrowdown']) dz += 1;
+    if (keys['a'] || keys['arrowleft']) dx -= 1;
+    if (keys['d'] || keys['arrowright']) dx += 1;
+    if (dx !== 0 || dz !== 0) {
+      wasmMovePlayer(dx, dz, delta);
+    }
+
+    // Element switching
+    if (keys['1']) wasmSwitchElement('fire');
+    if (keys['2']) wasmSwitchElement('water');
+    if (keys['3']) wasmSwitchElement('earth');
+    if (keys['4']) wasmSwitchElement('air');
+
+    // Attack
+    if (keys[' '] && !attackCooldownRef.current) {
+      attackCooldownRef.current = true;
+      wasmPlayerAttack();
+      setTimeout(() => { attackCooldownRef.current = false; }, 500);
+    }
+
+    // Tick WASM
+    wasmTick(Date.now(), delta);
+
+    // Process events
+    const events = wasmDrainEvents();
+    if (events.length > 0) processEvents(events);
+
+    // Read state into ref (NO re-render)
+    const state = wasmGetState();
+    wasmStateRef.current = state;
+
+    // Update HUD at ~10fps
+    hudTickRef.current++;
+    if (hudTickRef.current % 6 === 0) {
+      setHudStateRef.current({
+        activeElement: state.playerElement,
+        health: state.playerHealth,
+        currentRealm: state.currentRealm,
+        stats: {
+          kills: state.playerKills,
+          xp: state.playerXp,
+          level: state.playerLevel,
+          xpToNext: state.playerXpToNext,
+          maxHealth: state.playerMaxHealth,
+          attackPower: state.playerAttackPower,
+          realmsVisited: state.realmsVisited,
+        },
+      });
+    }
+  }, [processEvents]);
+
+  const startGame = useCallback(async () => {
+    setScreen('loading');
+    if (!isWasmReady()) {
+      await initializeWasm();
+    }
+    wasmInitGame();
+    const initialState = wasmGetState();
+    wasmStateRef.current = initialState;
+    setHudState({
+      activeElement: initialState.playerElement,
+      health: initialState.playerHealth,
+      currentRealm: initialState.currentRealm,
+      stats: {
+        kills: initialState.playerKills,
+        xp: initialState.playerXp,
+        level: initialState.playerLevel,
+        xpToNext: initialState.playerXpToNext,
+        maxHealth: initialState.playerMaxHealth,
+        attackPower: initialState.playerAttackPower,
+        realmsVisited: initialState.realmsVisited,
+      },
     });
-    showNotification('Welcome to the Ember Wastes');
-  }, [showNotification]);
+    setScreen('playing');
+    setDamageFlash(false);
+    setLevelUpFlash(false);
+    const events = wasmDrainEvents();
+    processEvents(events);
+    hudTickRef.current = 0;
+  }, [processEvents]);
 
   const backToMenu = useCallback(() => {
     setScreen('menu');
-    setHealth(100);
   }, []);
-
-  const switchElement = useCallback((el: Element) => setActiveElement(el), []);
-
-  const enterRealm = useCallback((realm: Realm) => {
-    setCurrentRealm(realm);
-    setEnemies(spawnEnemies(realm, 8 + stats.level * 2));
-    setCollectibles(spawnCollectibles(realm, 6));
-    setStats(prev => {
-      const visited = new Set(prev.realmsVisited);
-      visited.add(realm);
-      return { ...prev, realmsVisited: visited };
-    });
-    const names = { fire: 'Ember Wastes', water: 'Tidal Depths', earth: 'Verdant Wilds', air: 'Sky Citadel' };
-    showNotification(`Entered ${names[realm]}`);
-  }, [stats.level, showNotification]);
-
-  const gainXp = useCallback((amount: number) => {
-    setStats(prev => {
-      let newXp = prev.xp + amount;
-      let newLevel = prev.level;
-      let toNext = prev.xpToNext;
-      let newMaxHp = prev.maxHealth;
-      let newAtk = prev.attackPower;
-
-      while (newXp >= toNext) {
-        newXp -= toNext;
-        newLevel++;
-        toNext = calcXpToNext(newLevel);
-        newMaxHp += 15;
-        newAtk += 5;
-        setLevelUpFlash(true);
-        setTimeout(() => setLevelUpFlash(false), 1500);
-        showNotification(`Level Up! Level ${newLevel}`);
-      }
-
-      return { ...prev, xp: newXp, level: newLevel, xpToNext: toNext, maxHealth: newMaxHp, attackPower: newAtk };
-    });
-  }, [showNotification]);
-
-  const takeDamage = useCallback((amount: number) => {
-    setHealth(prev => {
-      const newHp = Math.max(0, prev - amount);
-      if (newHp <= 0) {
-        setTimeout(() => setScreen('gameover'), 500);
-      }
-      return newHp;
-    });
-    setDamageFlash(true);
-    setTimeout(() => setDamageFlash(false), 300);
-  }, []);
-
-  const heal = useCallback((amount: number) => {
-    setHealth(prev => Math.min(stats.maxHealth, prev + amount));
-  }, [stats.maxHealth]);
-
-  const attackEnemy = useCallback((enemyId: string) => {
-    setEnemies(prev => prev.map(e => {
-      if (e.id !== enemyId || e.dead) return e;
-      const dmg = calcDamage(stats.attackPower, activeElement, e.element);
-      const newHp = e.health - dmg;
-      if (newHp <= 0) {
-        gainXp(e.xpReward);
-        setStats(s => ({ ...s, kills: s.kills + 1 }));
-        return { ...e, health: 0, dead: true, deathTime: Date.now() };
-      }
-      return { ...e, health: newHp };
-    }));
-  }, [stats.attackPower, activeElement, gainXp]);
-
-  const collectItem = useCallback((itemId: string) => {
-    setCollectibles(prev => prev.map(c => {
-      if (c.id !== itemId || c.collected) return c;
-      if (c.type === 'health') heal(25);
-      if (c.type === 'xp') gainXp(20);
-      if (c.type === 'element_shard') gainXp(30);
-      return { ...c, collected: true };
-    }));
-  }, [heal, gainXp]);
 
   return {
-    screen, activeElement, health, currentRealm, enemies, collectibles, stats,
-    damageFlash, levelUpFlash, notification,
-    startGame, backToMenu, switchElement, enterRealm,
-    takeDamage, attackEnemy, collectItem, setEnemies,
+    screen,
+    activeElement: hudState.activeElement,
+    health: hudState.health,
+    currentRealm: hudState.currentRealm,
+    stats: hudState.stats,
+    damageFlash,
+    levelUpFlash,
+    notification,
+    startGame,
+    backToMenu,
+    wasmStateRef,
+    tickGame,
   };
 }

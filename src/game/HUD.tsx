@@ -12,13 +12,11 @@ interface HUDProps {
   onBack: () => void;
 }
 
-import React from 'react';
-
-const HUDComponent = ({
+export function HUD({
   activeElement, health, currentRealm, stats,
   damageFlash, levelUpFlash, notification,
   onSwitchElement, onBack,
-}: HUDProps) => {
+}: HUDProps) {
   const elements: Element[] = ['fire', 'water', 'earth', 'air'];
   const realmConfig = REALM_CONFIGS[currentRealm];
   const xpPercent = (stats.xp / stats.xpToNext) * 100;
@@ -147,6 +145,4 @@ const HUDComponent = ({
       </div>
     </div>
   );
-};
-
-export const HUD = React.memo(HUDComponent);
+}

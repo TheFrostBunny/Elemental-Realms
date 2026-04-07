@@ -1,19 +1,13 @@
-import React, { useRef, useCallback } from 'react';
+import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { CollectibleData, ELEMENTS, Element } from './types';
+import { CollectibleData, ELEMENTS } from './types';
 
 interface CollectiblesProps {
   collectibles: CollectibleData[];
-  playerRef: React.MutableRefObject<THREE.Group | null>;
-  onCollect: (id: string) => void;
 }
 
-const Collectible = React.memo(function Collectible({ item, playerRef, onCollect }: {
-  item: CollectibleData;
-  playerRef: React.MutableRefObject<THREE.Group | null>;
-  onCollect: (id: string) => void;
-}) {
+function Collectible({ item }: { item: CollectibleData }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   const colors = {
@@ -23,18 +17,10 @@ const Collectible = React.memo(function Collectible({ item, playerRef, onCollect
   };
   const color = colors[item.type];
 
-  useFrame(() => {
-    if (!meshRef.current || item.collected || !playerRef.current) return;
-
-    // Spin
-    meshRef.current.rotation.y += 0.03;
+  useFrame((_, delta) => {
+    if (!meshRef.current || item.collected) return;
+    meshRef.current.rotation.y += delta * 1.8;
     meshRef.current.position.y = item.position[1] + Math.sin(Date.now() * 0.003 + item.position[0]) * 0.2;
-
-    // Check pickup distance
-    const dist = meshRef.current.position.distanceTo(playerRef.current.position);
-    if (dist < 1.5) {
-      onCollect(item.id);
-    }
   });
 
   if (item.collected) return null;
@@ -48,25 +34,17 @@ const Collectible = React.memo(function Collectible({ item, playerRef, onCollect
       ) : (
         <icosahedronGeometry args={[0.22, 0]} />
       )}
-      <meshStandardMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={1.5}
-        transparent
-        opacity={0.85}
-      />
-      <pointLight color={color} intensity={0.5} distance={3} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.5} transparent opacity={0.85} />
     </mesh>
   );
-});
+}
 
-export const Collectibles = React.memo(function Collectibles({ collectibles, playerRef, onCollect }: CollectiblesProps) {
-  const memoOnCollect = useCallback(onCollect, [onCollect]);
+export function Collectibles({ collectibles }: CollectiblesProps) {
   return (
     <group>
       {collectibles.map(item => (
-        <Collectible key={item.id} item={item} playerRef={playerRef} onCollect={memoOnCollect} />
+        <Collectible key={item.id} item={item} />
       ))}
     </group>
   );
-});
+}
