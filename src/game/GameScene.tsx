@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { useRef, MutableRefObject } from 'react';
 =======
@@ -7,6 +8,9 @@ import { useRef } from 'react';
 import { useRef, MutableRefObject } from 'react';
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+import { useRef } from 'react';
+>>>>>>> main
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import { Terrain, FloatingIslands, RealmDecorations } from './Terrain';
@@ -14,6 +18,7 @@ import { Player } from './Player';
 import { Enemies } from './Enemies';
 import { Collectibles } from './Collectibles';
 import { Portals } from './Portals';
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { CombatEffects, AttackEffect } from './CombatEffects';
 import { CombatState } from './useGameState';
@@ -24,6 +29,8 @@ import { CombatEffects, AttackEffect } from './CombatEffects';
 import { CombatState } from './useGameState';
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 import { Element, Realm, ELEMENTS, REALM_CONFIGS } from './types';
 import { WasmGameState } from './wasmBridge';
 import * as THREE from 'three';
@@ -33,6 +40,7 @@ interface GameSceneProps {
   currentRealm: Realm;
   wasmStateRef: React.MutableRefObject<WasmGameState | null>;
   tickGame: (delta: number) => void;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   combatRef: MutableRefObject<CombatState>;
 =======
@@ -41,6 +49,8 @@ interface GameSceneProps {
   combatRef: MutableRefObject<CombatState>;
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 }
 
 // Reusable vectors to avoid GC pressure
@@ -96,6 +106,7 @@ function CameraFollower({ wasmStateRef }: { wasmStateRef: React.MutableRefObject
   return null;
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combatRef }: {
 =======
@@ -105,10 +116,14 @@ function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame }: {
 function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combatRef }: {
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame }: {
+>>>>>>> main
   wasmStateRef: React.MutableRefObject<WasmGameState | null>;
   activeElement: Element;
   currentRealm: Realm;
   tickGame: (delta: number) => void;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   combatRef: MutableRefObject<CombatState>;
 =======
@@ -117,6 +132,8 @@ function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combat
   combatRef: MutableRefObject<CombatState>;
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 }) {
   const playerRef = useRef<THREE.Group>(null);
 
@@ -135,6 +152,7 @@ function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combat
       <Portals currentRealm={currentRealm} />
       <Enemies enemies={enemies} />
       <Collectibles collectibles={collectibles} />
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       <CombatEffects effects={combatRef.current.effects} />
 =======
@@ -143,6 +161,8 @@ function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combat
       <CombatEffects effects={combatRef.current.effects} />
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
       <Player
         activeElement={activeElement}
         playerRef={playerRef}
@@ -152,6 +172,7 @@ function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combat
   );
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 export function GameScene({ activeElement, currentRealm, wasmStateRef, tickGame, combatRef }: GameSceneProps) {
 =======
@@ -161,6 +182,9 @@ export function GameScene({ activeElement, currentRealm, wasmStateRef, tickGame 
 export function GameScene({ activeElement, currentRealm, wasmStateRef, tickGame, combatRef }: GameSceneProps) {
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+export function GameScene({ activeElement, currentRealm, wasmStateRef, tickGame }: GameSceneProps) {
+>>>>>>> main
   const realmConfig = REALM_CONFIGS[currentRealm];
   const elConfig = ELEMENTS[activeElement];
 
@@ -193,6 +217,7 @@ export function GameScene({ activeElement, currentRealm, wasmStateRef, tickGame,
         activeElement={activeElement}
         currentRealm={currentRealm}
         tickGame={tickGame}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         combatRef={combatRef}
 =======
@@ -201,6 +226,8 @@ export function GameScene({ activeElement, currentRealm, wasmStateRef, tickGame,
         combatRef={combatRef}
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
       />
 
       <CameraFollower wasmStateRef={wasmStateRef} />

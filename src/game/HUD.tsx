@@ -29,10 +29,13 @@ export function HUD({
 =======
 <<<<<<< HEAD
   onSwitchElement, onBack,
+<<<<<<< HEAD
 =======
   onSwitchElement, onBack, combatHud,
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 }: HUDProps) {
   const elements: Element[] = ['fire', 'water', 'earth', 'air'];
   const realmConfig = REALM_CONFIGS[currentRealm];

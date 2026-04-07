@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { Element, Realm, GameStats, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from './types';
 import { AttackEffect } from './CombatEffects';
@@ -10,11 +11,15 @@ import { Element, Realm, GameStats, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALM
 import { AttackEffect } from './CombatEffects';
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+import { Element, Realm, GameStats } from './types';
+>>>>>>> main
 import {
   initializeWasm, isWasmReady, wasmInitGame, wasmSwitchElement,
   wasmMovePlayer, wasmPlayerAttack, wasmTick, wasmGetState, wasmDrainEvents,
   WasmGameState, GameEvent,
 } from './wasmBridge';
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { PORTAL_POSITIONS } from './Portals';
 =======
@@ -83,6 +88,13 @@ export interface CombatState {
   abilityEnd: number;
   effects: AttackEffect[];
 }
+=======
+
+export type GameScreen = 'menu' | 'playing' | 'gameover' | 'loading';
+
+// Global keyboard state – shared with GameWorld via ref
+export const keys: Record<string, boolean> = {};
+>>>>>>> main
 
 let effectIdCounter = 0;
 
@@ -104,6 +116,7 @@ export function useGameState() {
     stats: { kills: 0, xp: 0, level: 1, xpToNext: 80, maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire'] as Realm[]) },
   });
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   const [combatHud, setCombatHud] = useState({
     combo: 0,
@@ -167,10 +180,21 @@ export function useGameState() {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+  const wasmStateRef = useRef<WasmGameState | null>(null);
+  const screenRef = useRef<GameScreen>('menu');
+  const attackCooldownRef = useRef(false);
+  const hudTickRef = useRef(0);
+  const setHudStateRef = useRef(setHudState);
+  setHudStateRef.current = setHudState;
+  screenRef.current = screen;
+
+>>>>>>> main
   // Keyboard listeners
   useEffect(() => {
     const onDown = (e: KeyboardEvent) => {
       keys[e.key.toLowerCase()] = true;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       if (e.key === ' ' || e.key === 'Shift') e.preventDefault();
 =======
@@ -180,6 +204,9 @@ export function useGameState() {
       if (e.key === ' ' || e.key === 'Shift') e.preventDefault();
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+      if (e.key === ' ') e.preventDefault();
+>>>>>>> main
     };
     const onUp = (e: KeyboardEvent) => {
       keys[e.key.toLowerCase()] = false;
@@ -216,6 +243,7 @@ export function useGameState() {
     }
   }, []);
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   const addEffect = useCallback((
     type: AttackEffect['type'],
@@ -286,11 +314,19 @@ export function useGameState() {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+  // This function is called from GameWorld's useFrame (inside R3F)
+  const tickGame = useCallback((delta: number) => {
+    if (screenRef.current !== 'playing') return;
+
+    // Read keyboard and move player
+>>>>>>> main
     let dx = 0, dz = 0;
     if (keys['w'] || keys['arrowup']) dz -= 1;
     if (keys['s'] || keys['arrowdown']) dz += 1;
     if (keys['a'] || keys['arrowleft']) dx -= 1;
     if (keys['d'] || keys['arrowright']) dx += 1;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
     // Store last direction for dash/ability
@@ -341,6 +377,9 @@ export function useGameState() {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+    if (dx !== 0 || dz !== 0) {
+>>>>>>> main
       wasmMovePlayer(dx, dz, delta);
     }
 
@@ -350,6 +389,7 @@ export function useGameState() {
     if (keys['3']) wasmSwitchElement('earth');
     if (keys['4']) wasmSwitchElement('air');
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     // === COMBO ATTACK (Space) ===
     if (keys[' ']) {
@@ -432,6 +472,8 @@ export function useGameState() {
     wasmTick(now, delta);
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> main
     // Attack
     if (keys[' '] && !attackCooldownRef.current) {
       attackCooldownRef.current = true;
@@ -441,6 +483,7 @@ export function useGameState() {
 
     // Tick WASM
     wasmTick(Date.now(), delta);
+<<<<<<< HEAD
 =======
     // === COMBO ATTACK (Space) ===
     if (keys[' ']) {
@@ -523,11 +566,14 @@ export function useGameState() {
     wasmTick(now, delta);
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 
     // Process events
     const events = wasmDrainEvents();
     if (events.length > 0) processEvents(events);
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     // Read state into ref
     const state = wasmGetState();
@@ -535,10 +581,13 @@ export function useGameState() {
 
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> main
     // Read state into ref (NO re-render)
     const state = wasmGetState();
     wasmStateRef.current = state;
 
+<<<<<<< HEAD
 =======
     // Read state into ref
     const state = wasmGetState();
@@ -588,12 +637,15 @@ export function useGameState() {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
     // Update HUD at ~10fps
     hudTickRef.current++;
     if (hudTickRef.current % 6 === 0) {
       setHudStateRef.current({
         activeElement: state.playerElement,
         health: state.playerHealth,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         currentRealm: extendedRealmRef.current,
 =======
@@ -603,6 +655,9 @@ export function useGameState() {
         currentRealm: extendedRealmRef.current,
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+        currentRealm: state.currentRealm,
+>>>>>>> main
         stats: {
           kills: state.playerKills,
           xp: state.playerXp,
@@ -613,6 +668,7 @@ export function useGameState() {
           realmsVisited: state.realmsVisited,
         },
       });
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
       // Update combat HUD
@@ -647,6 +703,10 @@ export function useGameState() {
   }, [processEvents, addEffect]);
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+    }
+  }, [processEvents]);
+>>>>>>> main
 
   const startGame = useCallback(async () => {
     setScreen('loading');
@@ -656,6 +716,7 @@ export function useGameState() {
     wasmInitGame();
     const initialState = wasmGetState();
     wasmStateRef.current = initialState;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 <<<<<<< HEAD
@@ -671,6 +732,8 @@ export function useGameState() {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
     setHudState({
       activeElement: initialState.playerElement,
       health: initialState.playerHealth,
@@ -710,6 +773,7 @@ export function useGameState() {
     backToMenu,
     wasmStateRef,
     tickGame,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     combatHud,
     combatRef,
@@ -720,5 +784,7 @@ export function useGameState() {
     combatRef,
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
   };
 }

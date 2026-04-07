@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> main
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 =======
@@ -17,6 +20,7 @@ interface EnemiesProps {
   enemies: EnemyData[];
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 <<<<<<< HEAD
@@ -34,6 +38,8 @@ const LOD_LOW = 50;    // low detail 30-50, culled beyond 50
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 function Enemy({ enemy }: { enemy: EnemyData }) {
   const meshRef = useRef<THREE.Group>(null);
   const torusRef = useRef<THREE.Mesh>(null);
@@ -52,6 +58,7 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
     if (!meshRef.current || enemy.dead) return;
     meshRef.current.position.set(enemy.position[0], enemy.position[1], enemy.position[2]);
     if (torusRef.current) {
+<<<<<<< HEAD
 =======
   useFrame(({ camera }, delta) => {
     if (!meshRef.current || enemy.dead) return;
@@ -78,6 +85,8 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
       torusRef.current.rotation.x += delta * 1.2;
       torusRef.current.rotation.y += delta * 0.8;
     }
@@ -89,6 +98,7 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
     const fade = 1 - elapsed / 1500;
     return (
       <mesh position={enemy.position}>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         <sphereGeometry args={[0.5 + (1 - fade) * 2, 4, 4]} />
 =======
@@ -98,6 +108,9 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
         <sphereGeometry args={[0.5 + (1 - fade) * 2, 4, 4]} />
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+        <sphereGeometry args={[0.5 + (1 - fade) * 2, 6, 6]} />
+>>>>>>> main
         <meshStandardMaterial color={config.glowColor} emissive={config.glowColor} emissiveIntensity={3 * fade} transparent opacity={fade * 0.5} />
       </mesh>
     );
@@ -110,6 +123,7 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
 
   return (
     <group ref={meshRef} position={enemy.position}>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       {/* Main body - detail varies by LOD */}
       <mesh castShadow={lod === 'high'}>
@@ -134,6 +148,20 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
         <mesh ref={torusRef}>
           <torusGeometry args={[0.6, 0.05, lod === 'high' ? 6 : 3, lod === 'high' ? 12 : 6]} />
           <meshStandardMaterial color={config.glowColor} emissive={config.glowColor} emissiveIntensity={1} transparent opacity={0.6} />
+=======
+      <mesh castShadow>
+        <octahedronGeometry args={[0.4, 0]} />
+        <meshStandardMaterial color={config.color} emissive={config.color} emissiveIntensity={0.6} roughness={0.4} metalness={0.5} />
+      </mesh>
+      <mesh ref={torusRef}>
+        <torusGeometry args={[0.6, 0.05, 6, 12]} />
+        <meshStandardMaterial color={config.glowColor} emissive={config.glowColor} emissiveIntensity={1} transparent opacity={0.6} />
+      </mesh>
+      <group position={[0, 1, 0]}>
+        <mesh>
+          <planeGeometry args={[0.8, 0.08]} />
+          <meshBasicMaterial color="#333" transparent opacity={0.8} />
+>>>>>>> main
         </mesh>
 <<<<<<< Updated upstream
 =======
@@ -142,6 +170,7 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
           <meshBasicMaterial color={healthPercent > 0.5 ? '#4ade80' : healthPercent > 0.25 ? '#fbbf24' : '#ef4444'} />
         </mesh>
       </group>
+<<<<<<< HEAD
 =======
       {/* Main body - detail varies by LOD */}
       <mesh castShadow={lod === 'high'}>
@@ -181,6 +210,8 @@ function Enemy({ enemy }: { enemy: EnemyData }) {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
     </group>
   );
 }

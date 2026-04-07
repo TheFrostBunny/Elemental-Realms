@@ -10,7 +10,10 @@ const Index = () => {
     screen, activeElement, health, currentRealm, stats,
     damageFlash, levelUpFlash, notification,
     startGame, backToMenu, wasmStateRef, tickGame,
+<<<<<<< HEAD
     combatHud, combatRef,
+=======
+>>>>>>> main
   } = useGameState();
 
   if (screen === 'menu') {
@@ -43,7 +46,10 @@ const Index = () => {
         currentRealm={currentRealm}
         wasmStateRef={wasmStateRef}
         tickGame={tickGame}
+<<<<<<< HEAD
         combatRef={combatRef}
+=======
+>>>>>>> main
       />
       <HUD
         activeElement={activeElement}

@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { Realm, ELEMENTS, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from './types';
 =======
@@ -10,6 +11,9 @@ import { Realm, ELEMENTS } from './types';
 import { Realm, ELEMENTS, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from './types';
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+import { Realm, ELEMENTS } from './types';
+>>>>>>> main
 
 // 8 portals: cardinals + diagonals
 const PORTAL_POSITIONS: Record<Realm, [number, number, number]> = {
@@ -24,6 +28,7 @@ const PORTAL_POSITIONS: Record<Realm, [number, number, number]> = {
 <<<<<<< Updated upstream
 };
 
+<<<<<<< HEAD
 // Visual configs for extended realms
 const REALM_PORTAL_COLORS: Record<Realm, { color: string; glow: string }> = {
   fire: { color: '#e8541a', glow: '#ff8533' },
@@ -53,6 +58,8 @@ const REALM_PORTAL_COLORS: Record<Realm, { color: string; glow: string }> = {
 };
 
 >>>>>>> 0.1.0-beta
+=======
+>>>>>>> main
 function Portal({ realm, position, isCurrent }: {
   realm: Realm;
   position: [number, number, number];
@@ -66,11 +73,14 @@ function Portal({ realm, position, isCurrent }: {
 =======
 <<<<<<< HEAD
   const config = ELEMENTS[realm];
+<<<<<<< HEAD
 =======
   const colors = REALM_PORTAL_COLORS[realm];
   const config = REALM_CONFIGS[realm];
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 
   useFrame(() => {
     if (ringRef.current) {
@@ -105,6 +115,7 @@ function Portal({ realm, position, isCurrent }: {
           side={THREE.DoubleSide}
         />
       </mesh>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 <<<<<<< HEAD
@@ -112,6 +123,9 @@ function Portal({ realm, position, isCurrent }: {
 =======
 >>>>>>> 0.1.0-beta
 >>>>>>> Stashed changes
+=======
+      <pointLight color={config.glowColor} intensity={isCurrent ? 0.5 : 3} distance={8} />
+>>>>>>> main
       {!isCurrent && (
         <pointLight color={colors.glow} intensity={3} distance={8} />
       )}
@@ -120,9 +134,12 @@ function Portal({ realm, position, isCurrent }: {
 }
 
 export function Portals({ currentRealm }: { currentRealm: Realm }) {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> main
   const realms: Realm[] = ['fire', 'water', 'earth', 'air'];
 
 =======
