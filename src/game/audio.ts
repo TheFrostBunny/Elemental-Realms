@@ -36,15 +36,21 @@ const SFX_PATHS: Record<SfxName, string[]> = {
 };
 
 class AudioManager {
+  private static readonly SFX_COOLDOWN_MS = 120;
   private unlocked = false;
   private currentMusic: HTMLAudioElement | null = null;
   private currentMusicSrc: string | null = null;
   private lastSfxSrc: Partial<Record<SfxName, string>> = {};
+  private sfxLastPlayedAt: Partial<Record<SfxName, number>> = {};
+  private sfxPlaying: Partial<Record<SfxName, boolean>> = {};
+  private preloadedAudio = new Map<string, HTMLAudioElement>();
+  private preloaded = false;
   private musicVolume = 0.35;
   private sfxVolume = 0.7;
 
   unlock() {
     this.unlocked = true;
+    this.preloadAll();
   }
 
   setMusicVolume(volume: number) {
@@ -83,7 +89,7 @@ class AudioManager {
 
     this.stopMusic();
 
-    const audio = new Audio(src);
+    const audio = this.createAudioInstance(src);
     audio.loop = true;
     audio.volume = this.musicVolume;
 
@@ -97,18 +103,69 @@ class AudioManager {
 
   playSfx(name: SfxName) {
     if (!this.unlocked) return;
+
+    // Prevent stacking the same SFX rapidly or on top of itself.
+    if (this.sfxPlaying[name]) return;
+    const now = Date.now();
+    const lastPlayedAt = this.sfxLastPlayedAt[name] ?? 0;
+    if (now - lastPlayedAt < AudioManager.SFX_COOLDOWN_MS) return;
+
     const candidates = SFX_PATHS[name];
     if (candidates.length === 0) return;
     const pool = candidates.length > 1
       ? candidates.filter((src) => src !== this.lastSfxSrc[name])
       : candidates;
     const src = pool[Math.floor(Math.random() * pool.length)];
-    const audio = new Audio(src);
+    const audio = this.createAudioInstance(src);
     audio.volume = this.sfxVolume;
+    this.sfxPlaying[name] = true;
+    this.sfxLastPlayedAt[name] = now;
+    audio.addEventListener(
+      'ended',
+      () => {
+        this.sfxPlaying[name] = false;
+      },
+      { once: true },
+    );
+    audio.addEventListener(
+      'error',
+      () => {
+        this.sfxPlaying[name] = false;
+      },
+      { once: true },
+    );
     audio.play().catch(() => {
       // Ignore missing file / decode issues.
+      this.sfxPlaying[name] = false;
     });
     this.lastSfxSrc[name] = src;
+  }
+
+  preloadAll() {
+    if (this.preloaded) return;
+    this.preloaded = true;
+    const allSources = new Set<string>([
+      ...Object.values(MUSIC_PATHS).flat(),
+      ...Object.values(SFX_PATHS).flat(),
+    ]);
+    for (const src of allSources) {
+      const audio = new Audio(src);
+      audio.preload = 'auto';
+      audio.load();
+      this.preloadedAudio.set(src, audio);
+    }
+  }
+
+  private createAudioInstance(src: string) {
+    const preloaded = this.preloadedAudio.get(src);
+    if (!preloaded) {
+      return new Audio(src);
+    }
+    const cloned = preloaded.cloneNode(true);
+    if (cloned instanceof HTMLAudioElement) {
+      return cloned;
+    }
+    return new Audio(src);
   }
 }
 
