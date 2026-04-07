@@ -1,7 +1,15 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+<<<<<<< Updated upstream
 import { Realm, ELEMENTS, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from './types';
+=======
+<<<<<<< HEAD
+import { Realm, ELEMENTS } from './types';
+=======
+import { Realm, ELEMENTS, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from './types';
+>>>>>>> 0.1.0-beta
+>>>>>>> Stashed changes
 
 // 8 portals: cardinals + diagonals
 const PORTAL_POSITIONS: Record<Realm, [number, number, number]> = {
@@ -13,6 +21,7 @@ const PORTAL_POSITIONS: Record<Realm, [number, number, number]> = {
   lightning: [-11, 1.5, -11],
   ice: [-11, 1.5, 11],
   crystal: [11, 1.5, -11],
+<<<<<<< Updated upstream
 };
 
 // Visual configs for extended realms
@@ -25,8 +34,25 @@ const REALM_PORTAL_COLORS: Record<Realm, { color: string; glow: string }> = {
   lightning: { color: '#cccc00', glow: '#ffff44' },
   ice: { color: '#44aadd', glow: '#88ddff' },
   crystal: { color: '#cc22cc', glow: '#ff66ff' },
+=======
+>>>>>>> Stashed changes
 };
 
+<<<<<<< HEAD
+=======
+// Visual configs for extended realms
+const REALM_PORTAL_COLORS: Record<Realm, { color: string; glow: string }> = {
+  fire: { color: '#e8541a', glow: '#ff8533' },
+  water: { color: '#0ea5c9', glow: '#38bdf8' },
+  earth: { color: '#22915a', glow: '#4ade80' },
+  air: { color: '#94a8be', glow: '#bfcfdf' },
+  shadow: { color: '#6b00b3', glow: '#9b30ff' },
+  lightning: { color: '#cccc00', glow: '#ffff44' },
+  ice: { color: '#44aadd', glow: '#88ddff' },
+  crystal: { color: '#cc22cc', glow: '#ff66ff' },
+};
+
+>>>>>>> 0.1.0-beta
 function Portal({ realm, position, isCurrent }: {
   realm: Realm;
   position: [number, number, number];
@@ -34,8 +60,17 @@ function Portal({ realm, position, isCurrent }: {
 }) {
   const ringRef = useRef<THREE.Mesh>(null);
   const innerRef = useRef<THREE.Mesh>(null);
+<<<<<<< Updated upstream
   const colors = REALM_PORTAL_COLORS[realm];
   const config = REALM_CONFIGS[realm];
+=======
+<<<<<<< HEAD
+  const config = ELEMENTS[realm];
+=======
+  const colors = REALM_PORTAL_COLORS[realm];
+  const config = REALM_CONFIGS[realm];
+>>>>>>> 0.1.0-beta
+>>>>>>> Stashed changes
 
   useFrame(() => {
     if (ringRef.current) {
@@ -70,6 +105,13 @@ function Portal({ realm, position, isCurrent }: {
           side={THREE.DoubleSide}
         />
       </mesh>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+      <pointLight color={config.glowColor} intensity={isCurrent ? 0.5 : 3} distance={8} />
+=======
+>>>>>>> 0.1.0-beta
+>>>>>>> Stashed changes
       {!isCurrent && (
         <pointLight color={colors.glow} intensity={3} distance={8} />
       )}
@@ -78,6 +120,14 @@ function Portal({ realm, position, isCurrent }: {
 }
 
 export function Portals({ currentRealm }: { currentRealm: Realm }) {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+  const realms: Realm[] = ['fire', 'water', 'earth', 'air'];
+
+=======
+>>>>>>> 0.1.0-beta
+>>>>>>> Stashed changes
   return (
     <group>
       {ALL_REALMS.map(realm => (

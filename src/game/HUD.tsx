@@ -24,7 +24,15 @@ interface HUDProps {
 export function HUD({
   activeElement, health, currentRealm, stats,
   damageFlash, levelUpFlash, notification,
+<<<<<<< Updated upstream
   onSwitchElement, onBack, combatHud,
+=======
+<<<<<<< HEAD
+  onSwitchElement, onBack,
+=======
+  onSwitchElement, onBack, combatHud,
+>>>>>>> 0.1.0-beta
+>>>>>>> Stashed changes
 }: HUDProps) {
   const elements: Element[] = ['fire', 'water', 'earth', 'air'];
   const realmConfig = REALM_CONFIGS[currentRealm];
