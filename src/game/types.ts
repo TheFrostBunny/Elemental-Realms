@@ -1,3 +1,13 @@
+export interface AttackEffect {
+  id: number;
+  type: 'slash' | 'projectile' | 'aoe' | 'dash_trail';
+  element: Element;
+  position: [number, number, number];
+  direction: [number, number, number];
+  startTime: number;
+  duration: number;
+  combo: number;
+}
 export type Element = 'fire' | 'water' | 'earth' | 'air';
 
 export type Realm = 'fire' | 'water' | 'earth' | 'air' | 'shadow' | 'lightning' | 'ice' | 'crystal';
