@@ -124,7 +124,13 @@ export function useGameState() {
           setNotification(e.msg || null);
           setTimeout(() => setNotification(null), 2000);
           break;
-        case 'GameOver':
+        case 'GameOver': {
+          const score = hudState.stats.score;
+          const best = Number(localStorage.getItem('bestScore') || '0');
+          if (!best || score > best) {
+            localStorage.setItem('bestScore', score.toString());
+          }
+        }
           setTimeout(() => setScreen('gameover'), 500);
           break;
       }
