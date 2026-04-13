@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ELEMENTS, Element } from './types';
+import { audioManager } from './audio';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -15,6 +16,11 @@ export function MainMenu({ onStart }: MainMenuProps) {
   }, []);
 
   const elements: Element[] = ['fire', 'water', 'earth', 'air'];
+  const onStartClick = () => {
+    audioManager.unlock();
+    audioManager.playSfx('click');
+    onStart();
+  };
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col items-center justify-center overflow-hidden">
@@ -65,7 +71,10 @@ export function MainMenu({ onStart }: MainMenuProps) {
                 key={el}
                 className="flex flex-col items-center gap-2 cursor-default transition-transform duration-300"
                 style={{ transform: isHovered ? 'translateY(-4px)' : 'translateY(0)' }}
-                onMouseEnter={() => setHoveredEl(el)}
+                onMouseEnter={() => {
+                  setHoveredEl(el);
+                  audioManager.playSfx('hover');
+                }}
                 onMouseLeave={() => setHoveredEl(null)}
               >
                 <div
@@ -97,7 +106,7 @@ export function MainMenu({ onStart }: MainMenuProps) {
         </div>
 
         <button
-          onClick={onStart}
+          onClick={onStartClick}
           className="group relative font-display text-lg tracking-[0.3em] uppercase px-12 py-4 rounded-lg transition-all duration-300 active:scale-95 border border-primary/30 text-primary hover:border-primary/60"
           style={{
             background: 'linear-gradient(135deg, hsl(42 90% 55% / 0.08), hsl(42 90% 55% / 0.02))',
