@@ -60,8 +60,6 @@ export const SettingsPage: React.FC = () => {
       });
     }
   };
-    }
-  };
 
   const stopPreview = () => {
     if (previewAudio) {
