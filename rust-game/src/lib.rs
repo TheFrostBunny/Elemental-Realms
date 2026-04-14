@@ -1,3 +1,23 @@
+// Eksporter terrenghøyde til WASM/JS
+#[wasm_bindgen]
+pub fn terrain_height(x: f32, z: f32, realm: &str) -> f32 {
+    let mut h = 0.0;
+    h += (x * 0.23 + (z * 0.19).cos()).sin() * 1.1;
+    h += (z * 0.31 + (x * 0.17).sin()).cos() * 0.7;
+    h += ((x * 0.7 + 1.0).sin() * (z * 0.5 + 2.0).cos()) * 0.5;
+    h += ((x + z) * 0.11).sin() * 0.4;
+    h += ((x - z) * 0.13).cos() * 0.3;
+    h += (x * 0.045).sin() * (z * 0.045).cos() * 1.2;
+
+    match realm {
+        "ice" => h *= 0.35,
+        "crystal" => h = h.abs() * 1.9,
+        "shadow" => h *= 0.13,
+        "lightning" => h += (x * 2.2).sin() * 0.45,
+        _ => {}
+    }
+    h
+}
 use wasm_bindgen::prelude::*;
 use serde::{Serialize, Deserialize};
 
@@ -59,6 +79,7 @@ pub struct Vec3 {
     pub z: f32,
 }
 
+#[allow(dead_code)]
 impl Vec3 {
     fn distance_to(&self, other: &Vec3) -> f32 {
         let dx = self.x - other.x;
@@ -206,6 +227,7 @@ impl GameWorld {
 
 static mut WORLD: Option<GameWorld> = None;
 
+#[allow(static_mut_refs)]
 fn world() -> &'static mut GameWorld {
     unsafe { WORLD.as_mut().expect("Game not initialized") }
 }
