@@ -23,6 +23,7 @@ export const ELEMENTS: Record<Element, ElementConfig> = {
 export interface EnemyData {
   id: string;
   element: Element;
+  archetype: EnemyArchetype;
   position: [number, number, number];
   health: number;
   maxHealth: number;
@@ -34,6 +35,8 @@ export interface EnemyData {
   attackCooldown: number;
   lastAttackTime: number;
 }
+
+export type EnemyArchetype = 'scout' | 'brute' | 'striker' | 'tank' | 'mystic' | 'miniBoss';
 
 export interface CollectibleData {
   id: string;

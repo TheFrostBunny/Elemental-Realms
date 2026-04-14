@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Element, Realm, GameStats } from './types';
+import { audioManager } from './audio';
 import {
   initializeWasm, isWasmReady, wasmInitGame, wasmSwitchElement,
   wasmMovePlayer, wasmPlayerAttack, wasmTick, wasmGetState, wasmDrainEvents,
@@ -32,6 +33,7 @@ export function useGameState() {
   const wasmStateRef = useRef<WasmGameState | null>(null);
   const screenRef = useRef<GameScreen>('menu');
   const attackCooldownRef = useRef(false);
+  const switchSoundCooldownRef = useRef(false);
   const hudTickRef = useRef(0);
   const setHudStateRef = useRef(setHudState);
   setHudStateRef.current = setHudState;
@@ -59,19 +61,23 @@ export function useGameState() {
       switch (e.type) {
         case 'DamageFlash':
           setDamageFlash(true);
+          audioManager.playSfx('damage');
           setTimeout(() => setDamageFlash(false), 300);
           break;
         case 'LevelUp':
           setLevelUpFlash(true);
+          audioManager.playSfx('levelUp');
           setTimeout(() => setLevelUpFlash(false), 1500);
           setNotification(`Level Up! Level ${e.level}`);
           setTimeout(() => setNotification(null), 2000);
           break;
         case 'Notification':
+          audioManager.playSfx('notification');
           setNotification(e.msg || null);
           setTimeout(() => setNotification(null), 2000);
           break;
         case 'GameOver':
+          audioManager.playSfx('gameOver');
           setTimeout(() => setScreen('gameover'), 500);
           break;
       }
@@ -93,15 +99,22 @@ export function useGameState() {
     }
 
     // Element switching
-    if (keys['1']) wasmSwitchElement('fire');
-    if (keys['2']) wasmSwitchElement('water');
-    if (keys['3']) wasmSwitchElement('earth');
-    if (keys['4']) wasmSwitchElement('air');
+    let switched = false;
+    if (keys['1']) { wasmSwitchElement('fire'); switched = true; }
+    if (keys['2']) { wasmSwitchElement('water'); switched = true; }
+    if (keys['3']) { wasmSwitchElement('earth'); switched = true; }
+    if (keys['4']) { wasmSwitchElement('air'); switched = true; }
+    if (switched && !switchSoundCooldownRef.current) {
+      switchSoundCooldownRef.current = true;
+      audioManager.playSfx('elementSwitch');
+      setTimeout(() => { switchSoundCooldownRef.current = false; }, 200);
+    }
 
     // Attack
     if (keys[' '] && !attackCooldownRef.current) {
       attackCooldownRef.current = true;
       wasmPlayerAttack();
+      audioManager.playSfx('attack');
       setTimeout(() => { attackCooldownRef.current = false; }, 500);
     }
 
@@ -138,6 +151,7 @@ export function useGameState() {
 
   const startGame = useCallback(async () => {
     setScreen('loading');
+    audioManager.unlock();
     if (!isWasmReady()) {
       await initializeWasm();
     }
@@ -164,11 +178,23 @@ export function useGameState() {
     const events = wasmDrainEvents();
     processEvents(events);
     hudTickRef.current = 0;
+    audioManager.playSfx('gameStart');
+    audioManager.playMusic('game');
   }, [processEvents]);
 
   const backToMenu = useCallback(() => {
     setScreen('menu');
+    audioManager.playMusic('menu');
   }, []);
+
+  useEffect(() => {
+    if (screen === 'menu') {
+      audioManager.playMusic('menu');
+    }
+    if (screen === 'gameover') {
+      audioManager.playMusic('menu');
+    }
+  }, [screen]);
 
   return {
     screen,
