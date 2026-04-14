@@ -6,7 +6,7 @@ import {
   wasmMovePlayer, wasmPlayerAttack, wasmTick, wasmGetState, wasmDrainEvents,
   WasmGameState, GameEvent,
 } from './wasmBridge';
-import { PORTAL_POSITIONS } from './Portals';
+import { PORTAL_POSITIONS } from '../components/gameplay/Portals';
 
 export type GameScreen = 'menu' | 'playing' | 'gameover' | 'loading';
 
@@ -54,7 +54,7 @@ export function useGameState() {
     activeElement: 'fire',
     health: 100,
     currentRealm: 'fire',
-    stats: { kills: 0, xp: 0, level: 1, xpToNext: 80, maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire'] as Realm[]) },
+    stats: { kills: 0, xp: 0, level: 1, xpToNext: 80, maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire'] as Realm[]), score: 0 },
   });
 
   const [combatHud, setCombatHud] = useState({
@@ -75,7 +75,6 @@ export function useGameState() {
   setCombatHudRef.current = setCombatHud;
   screenRef.current = screen;
 
-  // Combat state (mutable ref for frame-loop performance)
   const combatRef = useRef<CombatState>({
     combo: 0,
     comboTimer: 0,
@@ -135,7 +134,7 @@ export function useGameState() {
           break;
       }
     }
-  }, []);
+  }, [hudState.stats.score]);
 
   const addEffect = useCallback((
     type: AttackEffect['type'],
@@ -163,23 +162,19 @@ export function useGameState() {
     const now = Date.now();
     const combat = combatRef.current;
 
-    // Clean up old effects
     combat.effects = combat.effects.filter(e => now - e.startTime < e.duration + 100);
 
-    // Get player direction from movement
     let dx = 0, dz = 0;
     if (keys['w'] || keys['arrowup']) dz -= 1;
     if (keys['s'] || keys['arrowdown']) dz += 1;
     if (keys['a'] || keys['arrowleft']) dx -= 1;
     if (keys['d'] || keys['arrowright']) dx += 1;
 
-    // Store last direction for dash/ability
     if (dx !== 0 || dz !== 0) {
       const len = Math.sqrt(dx * dx + dz * dz);
       combat.dashDir = [dx / len, dz / len];
     }
 
-    // === DASH (Shift) ===
     if (keys['shift'] && !combat.isDashing && now >= combat.dashCooldownEnd) {
       combat.isDashing = true;
       combat.dashEnd = now + DASH_DURATION;
@@ -329,11 +324,9 @@ export function useGameState() {
       }
     }
 
-    // Also track when WASM changes realm (base 4 realms)
     const baseRealms: Realm[] = ['fire', 'water', 'earth', 'air'];
     if (baseRealms.includes(state.currentRealm as Realm)) {
       if (extendedRealmRef.current !== state.currentRealm) {
-        // Check if we're near a base portal - WASM handles this
         for (const br of baseRealms) {
           const pp = PORTAL_POSITIONS[br];
           const d = Math.sqrt((pp[0] - state.playerX) ** 2 + (pp[2] - state.playerZ) ** 2);
@@ -360,6 +353,7 @@ export function useGameState() {
           maxHealth: state.playerMaxHealth,
           attackPower: state.playerAttackPower,
           realmsVisited: state.realmsVisited,
+          score: state.playerKills * 100 + state.playerXp + (state.playerLevel - 1) * 1000,
         },
       });
 
@@ -402,6 +396,7 @@ export function useGameState() {
         maxHealth: initialState.playerMaxHealth,
         attackPower: initialState.playerAttackPower,
         realmsVisited: initialState.realmsVisited,
+        score: initialState.playerKills * 100 + initialState.playerXp + (initialState.playerLevel - 1) * 1000,
       },
     });
     setScreen('playing');

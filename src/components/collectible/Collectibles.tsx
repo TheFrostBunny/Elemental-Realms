@@ -6,7 +6,7 @@ interface CollectiblesProps {
   collectibles: CollectibleData[];
 }
 
-export function Collectibles({ collectibles }: CollectiblesProps) {
+export default function Collectibles({ collectibles }: CollectiblesProps) {
   return (
     <group>
       {collectibles.map(item => (

@@ -1,10 +1,10 @@
 import { useGameState } from '@/game/useGameState';
-import { MainMenu } from '@/game/MainMenu';
-import { GameScene } from '@/game/GameScene';
-import { HUD } from '@/game/HUD';
-import { GameOverScreen } from '@/game/GameOverScreen';
-import { Minimap } from '@/game/Minimap';
-import { InGameSettingsDialog } from '@/game/InGameSettingsDialog';
+import { MainMenu } from '@/components/menuscreen/MainMenu';
+import { GameScene } from '@/components/gamescreen/GameScene';
+import { HUD } from '@/components/gameplay/HUD';
+import { GameOverScreen } from '@/components/gamescreen/GameOverScreen';
+import { Minimap } from '@/components/gameplay/Minimap';
+import { InGameSettingsDialog } from '@/components/menuscreen/InGameSettingsDialog';
 import { GameAudioManager } from '@/components/Audio/AudioManager';
 
 const Index = () => {
@@ -33,9 +33,10 @@ const Index = () => {
   }
 
   if (screen === 'gameover') {
+    const previousScore = Number(localStorage.getItem('bestScore') || '0');
     return <>
       <GameAudioManager gameState="gameover" />
-      <GameOverScreen stats={stats} onRestart={startGame} onMenu={backToMenu} />
+      <GameOverScreen stats={stats} previousScore={previousScore} onRestart={startGame} onMenu={backToMenu} />
       <InGameSettingsDialog />
     </>;
   }
@@ -44,7 +45,9 @@ const Index = () => {
 
   return (
     <>
-      <GameAudioManager gameState="playing" currentRealm={currentRealm} />
+      <GameAudioManager gameState="playing" currentRealm={
+        ['fire', 'water', 'earth', 'air'].includes(currentRealm) ? currentRealm as 'fire' | 'water' | 'earth' | 'air' : 'fire'
+      } />
       <div className="relative w-screen h-screen overflow-hidden">
         <GameScene
           activeElement={activeElement}

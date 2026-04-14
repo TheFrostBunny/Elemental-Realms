@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Realm, Element, ELEMENTS, REALM_CONFIGS, ALL_REALMS, EnemyData } from './types';
+import { Realm, Element, ELEMENTS, REALM_CONFIGS, ALL_REALMS, EnemyData } from '../../game/types';
 import { PORTAL_POSITIONS } from './Portals';
 
 interface MinimapProps {

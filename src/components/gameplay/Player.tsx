@@ -1,16 +1,18 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Element, ELEMENTS } from './types';
-import { WasmGameState } from './wasmBridge';
+import { Element, ELEMENTS, Realm } from '../../game/types';
+import { WasmGameState } from '../../game/wasmBridge';
+import { getTerrainHeight } from '../../lib/terrainNoise';
 
 interface PlayerProps {
   activeElement: Element;
   playerRef: React.MutableRefObject<THREE.Group | null>;
   wasmStateRef: React.MutableRefObject<WasmGameState | null>;
+  currentRealm?: Realm;
 }
 
-export function Player({ activeElement, playerRef, wasmStateRef }: PlayerProps) {
+export function Player({ activeElement, playerRef, wasmStateRef, currentRealm }: PlayerProps) {
   const groupRef = useRef<THREE.Group>(null);
   const particlesRef = useRef<THREE.Points>(null);
   const prevPosRef = useRef({ x: 0, z: 0 });
@@ -32,8 +34,16 @@ export function Player({ activeElement, playerRef, wasmStateRef }: PlayerProps) 
     }
     prevPosRef.current = { x: playerX, z: playerZ };
 
-    // Sync position from WASM
-    groupRef.current.position.set(playerX, playerY + Math.sin(Date.now() * 0.003) * 0.1, playerZ);
+    // Sync position from WASM, men Y følger terrenget
+    let terrainY = 0;
+    if (typeof currentRealm === 'string') {
+      terrainY = getTerrainHeight(playerX, playerZ, currentRealm);
+    }
+    groupRef.current.position.set(
+      playerX,
+      terrainY + 0.15 + Math.sin(Date.now() * 0.003) * 0.1,
+      playerZ
+    );
 
     if (particlesRef.current) {
       particlesRef.current.rotation.y += delta * 2;

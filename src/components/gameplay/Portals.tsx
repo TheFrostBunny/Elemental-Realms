@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Realm, ELEMENTS, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from './types';
+import { Realm, ELEMENTS, REALM_CONFIGS, REALM_BASE_ELEMENT, ALL_REALMS } from '../../game/types';
 
 // 8 portals: cardinals + diagonals
 const PORTAL_POSITIONS: Record<Realm, [number, number, number]> = {

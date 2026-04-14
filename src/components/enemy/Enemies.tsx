@@ -6,7 +6,7 @@ interface EnemiesProps {
   enemies: EnemyData[];
 }
 
-export function Enemies({ enemies }: EnemiesProps) {
+export default function Enemies({ enemies }: EnemiesProps) {
   return (
     <group>
       {enemies.map(enemy => (

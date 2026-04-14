@@ -1,42 +1,82 @@
-import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useMemo, useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Realm, REALM_CONFIGS } from './types';
-
+import { Realm, REALM_CONFIGS } from '../../game/types';
+import { getTerrainHeight } from '../../lib/terrainNoise';
 interface TerrainProps {
   currentRealm: Realm;
 }
 
 export function Terrain({ currentRealm }: TerrainProps) {
   const config = REALM_CONFIGS[currentRealm];
+  const { scene, clock } = useThree();
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useEffect(() => {
+    scene.background = new THREE.Color(config.skyColor);
+    scene.fog = new THREE.FogExp2(config.fogColor, 0.028);
+  }, [scene, config.skyColor, config.fogColor]);
+
+  function lerpColor(a: string, b: string, t: number) {
+    const ca = new THREE.Color(a);
+    const cb = new THREE.Color(b);
+    return ca.lerp(cb, t).getStyle();
+  }
 
   const geometry = useMemo(() => {
     const geo = new THREE.PlaneGeometry(50, 50, 40, 40);
+    return geo;
+  }, []);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const geo = meshRef.current.geometry;
     const pos = geo.attributes.position;
+    const time = clock.getElapsedTime();
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
       const z = pos.getY(i);
-      let height = Math.sin(x * 0.3) * Math.cos(z * 0.3) * 0.8 +
-        Math.sin(x * 0.7 + 1) * 0.3 +
-        Math.cos(z * 0.5 + 2) * 0.4;
-      // Realm-specific terrain variation
-      if (currentRealm === 'ice') height *= 0.4; // flatter icy terrain
-      if (currentRealm === 'crystal') height = Math.abs(height) * 1.5; // spiky crystals
-      if (currentRealm === 'shadow') height *= 0.2; // nearly flat void
-      if (currentRealm === 'lightning') height += Math.sin(x * 2) * 0.3; // jagged peaks
+      let height = getTerrainHeight(x, z, currentRealm);
+      height += Math.sin(time + x * 0.15 + z * 0.18) * 0.12;
+      if (currentRealm === 'water' || currentRealm === 'ice') {
+        height += Math.sin(time * 1.2 + x * 0.22 + z * 0.21) * 0.08;
+      }
       pos.setZ(i, height);
     }
+    pos.needsUpdate = true;
     geo.computeVertexNormals();
-    return geo;
-  }, [currentRealm]);
+  });
+
+  const gradientMap = useMemo(() => {
+    const size = 32;
+    const data = new Uint8Array(3 * size);
+    const colorA = new THREE.Color(config.groundColor);
+    const colorB = new THREE.Color(config.particleColor);
+    for (let i = 0; i < size; i++) {
+      const t = i / (size - 1);
+      const c = colorA.clone().lerp(colorB, t);
+      data[i * 3] = Math.floor(c.r * 255);
+      data[i * 3 + 1] = Math.floor(c.g * 255);
+      data[i * 3 + 2] = Math.floor(c.b * 255);
+    }
+    const tex = new THREE.DataTexture(data, size, 1, THREE.RGBFormat);
+    tex.needsUpdate = true;
+    return tex;
+  }, [config.groundColor, config.particleColor]);
 
   return (
-    <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-      <meshStandardMaterial color={config.groundColor} roughness={0.9} metalness={0.1} />
+    <mesh ref={meshRef} geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <meshStandardMaterial
+        color={config.groundColor}
+        roughness={0.7}
+        metalness={0.18}
+        emissive={config.ambientColor}
+        emissiveIntensity={0.13}
+        map={gradientMap}
+      />
     </mesh>
   );
 }
-
 export function FloatingIslands({ currentRealm }: { currentRealm: Realm }) {
   const groupRef = useRef<THREE.Group>(null);
   const config = REALM_CONFIGS[currentRealm];

@@ -1,15 +1,15 @@
 import { useRef, MutableRefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
-import { Terrain, FloatingIslands, RealmDecorations } from './Terrain';
-import { Player } from './Player';
-import { Enemies } from './Enemies';
-import { Collectibles } from './Collectibles';
-import { Portals } from './Portals';
-import { CombatEffects, AttackEffect } from './CombatEffects';
-import { CombatState } from './useGameState';
-import { Element, Realm, ELEMENTS, REALM_CONFIGS } from './types';
-import { WasmGameState } from './wasmBridge';
+import { Terrain, FloatingIslands, RealmDecorations } from '../gameplay/Terrain';
+import { Player } from '../gameplay/Player';
+import  Enemies  from '../enemy/Enemies';
+import Collectibles from '../../components/collectible/Collectibles';
+import { Portals } from '../gameplay/Portals';
+import { CombatEffects } from '../../game/CombatEffects';
+import { CombatState } from '../../game/useGameState';
+import { Element, Realm, ELEMENTS, REALM_CONFIGS } from '../../game/types';
+import { WasmGameState } from '../../game/wasmBridge';
 import * as THREE from 'three';
 
 interface GameSceneProps {
@@ -20,10 +20,6 @@ interface GameSceneProps {
   combatRef: MutableRefObject<CombatState>;
 }
 
-// Reusable vectors to avoid GC pressure
-const _playerPos = new THREE.Vector3();
-const _movement = new THREE.Vector3();
-const _baseOffset = new THREE.Vector3();
 const _targetPos = new THREE.Vector3();
 const _targetLookAt = new THREE.Vector3();
 
@@ -95,13 +91,14 @@ function GameWorld({ wasmStateRef, activeElement, currentRealm, tickGame, combat
       <FloatingIslands currentRealm={currentRealm} />
       <RealmDecorations currentRealm={currentRealm} />
       <Portals currentRealm={currentRealm} />
-      <Enemies enemies={enemies} />
+      <Enemies enemies={enemies} currentRealm={currentRealm} />
       <Collectibles collectibles={collectibles} />
       <CombatEffects effects={combatRef.current.effects} />
       <Player
         activeElement={activeElement}
         playerRef={playerRef}
         wasmStateRef={wasmStateRef}
+        currentRealm={currentRealm}
       />
     </>
   );

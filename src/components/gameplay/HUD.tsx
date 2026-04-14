@@ -1,4 +1,4 @@
-import { Element, Realm, GameStats, ELEMENTS, REALM_CONFIGS } from './types';
+import { Element, Realm, GameStats, ELEMENTS, REALM_CONFIGS } from '../../game/types';
 
 interface CombatHudData {
   combo: number;
