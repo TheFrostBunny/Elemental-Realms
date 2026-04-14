@@ -1,0 +1,99 @@
+import { useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+import { EnemyData, ELEMENTS } from '../../game/types';
+import { EnemyHealthBar } from './EnemyHealthBar';
+
+const _camPos = new THREE.Vector3();
+const _enemyPos = new THREE.Vector3();
+
+const LOD_HIGH = 15;
+const LOD_MED = 30;
+const LOD_LOW = 50;
+
+export function Enemy({ enemy }: { enemy: EnemyData }) {
+  const meshRef = useRef<THREE.Group>(null);
+  const torusRef = useRef<THREE.Mesh>(null);
+  const config = ELEMENTS[enemy.element];
+  const lodRef = useRef<'high' | 'med' | 'low' | 'cull'>('high');
+  const [visible, setVisible] = useState(true);
+  const frameSkip = useRef(0);
+
+  useFrame(({ camera }, delta) => {
+    if (!meshRef.current || enemy.dead) return;
+    meshRef.current.position.set(enemy.position[0], enemy.position[1], enemy.position[2]);
+
+    frameSkip.current++;
+    if (frameSkip.current % 10 === 0) {
+      _camPos.copy(camera.position);
+      _enemyPos.set(enemy.position[0], enemy.position[1], enemy.position[2]);
+      const dist = _camPos.distanceTo(_enemyPos);
+
+      const newLod = dist > LOD_LOW ? 'cull' : dist > LOD_MED ? 'low' : dist > LOD_HIGH ? 'med' : 'high';
+      if (newLod !== lodRef.current) {
+        lodRef.current = newLod;
+        setVisible(newLod !== 'cull');
+      }
+    }
+
+    if (torusRef.current && lodRef.current === 'high') {
+      torusRef.current.rotation.x += delta * 1.2;
+      torusRef.current.rotation.y += delta * 0.8;
+    }
+  });
+
+  if (enemy.dead) {
+    const elapsed = Date.now() - (enemy.deathTime || Date.now());
+    if (elapsed > 1500) return null;
+    const fade = 1 - elapsed / 1500;
+    return (
+      <mesh position={enemy.position}>
+        <sphereGeometry args={[0.5 + (1 - fade) * 2, 4, 4]} />
+        <meshStandardMaterial color={config.glowColor} emissive={config.glowColor} emissiveIntensity={3 * fade} transparent opacity={fade * 0.5} />
+      </mesh>
+    );
+  }
+
+  if (!visible) return <group ref={meshRef} position={enemy.position} />;
+
+  const lod = lodRef.current;
+  const healthPercent = enemy.health / enemy.maxHealth;
+  const isMiniBoss = enemy.archetype === 'miniBoss';
+  const hpBarScale = isMiniBoss ? 1.35 : 1;
+
+  return (
+    <group ref={meshRef} position={enemy.position}>
+      {/* Main body - detail varies by LOD */}
+      <mesh castShadow={lod === 'high'}>
+        <octahedronGeometry args={[0.4, lod === 'high' ? 0 : 0]} />
+        <meshStandardMaterial
+          color={config.color}
+          emissive={config.color}
+          emissiveIntensity={isMiniBoss ? 1.1 : lod === 'low' ? 0.3 : 0.6}
+          roughness={0.4}
+          metalness={0.5}
+        />
+      </mesh>
+
+      {lod !== 'low' && (
+        <mesh ref={torusRef}>
+          <torusGeometry args={[isMiniBoss ? 0.78 : 0.6, isMiniBoss ? 0.08 : 0.05, lod === 'high' ? 6 : 3, lod === 'high' ? 12 : 6]} />
+          <meshStandardMaterial color={config.glowColor} emissive={config.glowColor} emissiveIntensity={1} transparent opacity={0.6} />
+        </mesh>
+      )}
+
+      {isMiniBoss && lod !== 'low' && (
+        <mesh rotation={[0, 0, Math.PI / 6]}>
+          <torusGeometry args={[0.95, 0.045, 10, 28]} />
+          <meshStandardMaterial color="#facc15" emissive="#facc15" emissiveIntensity={1.6} transparent opacity={0.8} />
+        </mesh>
+      )}
+
+      {lod !== 'low' && (
+        <group scale={[hpBarScale, 1, 1]}>
+          <EnemyHealthBar healthPercent={healthPercent} />
+        </group>
+      )}
+    </group>
+  );
+}
