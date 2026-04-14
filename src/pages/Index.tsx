@@ -4,6 +4,8 @@ import { GameScene } from '@/game/GameScene';
 import { HUD } from '@/game/HUD';
 import { GameOverScreen } from '@/game/GameOverScreen';
 import { Minimap } from '@/game/Minimap';
+import { InGameSettingsDialog } from '@/game/InGameSettingsDialog';
+import { GameAudioManager } from '@/components/Audio/AudioManager';
 
 const Index = () => {
   const {
@@ -31,45 +33,52 @@ const Index = () => {
   }
 
   if (screen === 'gameover') {
-    return <GameOverScreen stats={stats} onRestart={startGame} onMenu={backToMenu} />;
+    return <>
+      <GameAudioManager gameState="gameover" />
+      <GameOverScreen stats={stats} onRestart={startGame} onMenu={backToMenu} />
+      <InGameSettingsDialog />
+    </>;
   }
 
   const state = wasmStateRef.current;
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
-      <GameScene
-        activeElement={activeElement}
-        currentRealm={currentRealm}
-        wasmStateRef={wasmStateRef}
-        tickGame={tickGame}
-        combatRef={combatRef}
-      />
-      <HUD
-        activeElement={activeElement}
-        health={health}
-        currentRealm={currentRealm}
-        stats={stats}
-        damageFlash={damageFlash}
-        levelUpFlash={levelUpFlash}
-        notification={notification}
-        onSwitchElement={() => {}}
-        onBack={backToMenu}
-        combatHud={combatHud}
-      />
-      {/* Minimap - bottom right above element chart */}
-      {state && (
-        <div className="fixed bottom-24 right-5 z-20">
-          <Minimap
-            playerX={state.playerX}
-            playerZ={state.playerZ}
-            currentRealm={currentRealm}
-            activeElement={activeElement}
-            enemies={state.enemies}
-          />
-        </div>
-      )}
-    </div>
+    <>
+      <GameAudioManager gameState="playing" currentRealm={currentRealm} />
+      <div className="relative w-screen h-screen overflow-hidden">
+        <GameScene
+          activeElement={activeElement}
+          currentRealm={currentRealm}
+          wasmStateRef={wasmStateRef}
+          tickGame={tickGame}
+          combatRef={combatRef}
+        />
+        <HUD
+          activeElement={activeElement}
+          health={health}
+          currentRealm={currentRealm}
+          stats={stats}
+          damageFlash={damageFlash}
+          levelUpFlash={levelUpFlash}
+          notification={notification}
+          onSwitchElement={() => {}}
+          onBack={backToMenu}
+          combatHud={combatHud}
+        />
+        {state && (
+          <div className="fixed bottom-24 right-5 z-20">
+            <Minimap
+              playerX={state.playerX}
+              playerZ={state.playerZ}
+              currentRealm={currentRealm}
+              activeElement={activeElement}
+              enemies={state.enemies}
+            />
+          </div>
+        )}
+      </div>
+      <InGameSettingsDialog />
+    </>
   );
 };
 
