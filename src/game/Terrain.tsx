@@ -64,49 +64,60 @@ export function Terrain({ currentRealm }: TerrainProps) {
   const config = REALM_CONFIGS[currentRealm];
   const geometryRef = useRef<THREE.PlaneGeometry | null>(null);
 
-  const geometry = useMemo(() => {
-    // Dispose previous geometry to prevent memory leaks
-    if (geometryRef.current) {
-      geometryRef.current.dispose();
-    }
 
+  const geometry = useMemo(() => {
+    if (geometryRef.current) geometryRef.current.dispose();
     const geo = new THREE.PlaneGeometry(TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_SEGMENTS, TERRAIN_SEGMENTS);
     const pos = geo.attributes.position;
-    
-    // Generate heightmap
+    // Legg til vertex colors for varierende bakke
+    const colors = [];
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
       const z = pos.getY(i);
-      
       const baseHeight = generateNoise(x, z) * TERRAIN_HEIGHT_MULTIPLIER;
       const finalHeight = applyRealmModifications(baseHeight, currentRealm, x, z);
-      
       pos.setZ(i, finalHeight);
+
+      // Farge basert på høyde og realm
+      let color = new THREE.Color(config.groundColor);
+      if (finalHeight > 0.7) {
+        // Høyere topper får lysere farge
+        color.offsetHSL(0, -0.1, 0.18);
+      } else if (finalHeight < -0.5) {
+        // Daler får mørkere farge
+        color.offsetHSL(0, -0.05, -0.15);
+      } else if (currentRealm === 'ice') {
+        color.lerp(new THREE.Color('#b3e6ff'), 0.4);
+      } else if (currentRealm === 'fire' && finalHeight > 0.3) {
+        color.lerp(new THREE.Color('#ffb347'), 0.3);
+      } else if (currentRealm === 'earth' && finalHeight > 0.2) {
+        color.lerp(new THREE.Color('#44ff00'), 0.2);
+      } else if (currentRealm === 'crystal' && finalHeight > 0.5) {
+        color.lerp(new THREE.Color('#ff44ff'), 0.3);
+      }
+      colors.push(color.r, color.g, color.b);
     }
-    
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     geo.computeVertexNormals();
     geometryRef.current = geo;
     return geo;
   }, [currentRealm]);
 
-  // Enhanced material with better PBR properties
+  // Materiale med vertexColors
   const material = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
-      color: config.groundColor,
+      vertexColors: true,
       roughness: currentRealm === 'ice' ? 0.1 : currentRealm === 'crystal' ? 0.05 : 0.9,
       metalness: currentRealm === 'crystal' || currentRealm === 'lightning' ? 0.8 : 0.1,
       emissive: config.ambientColor,
       emissiveIntensity: 0.05,
     });
-
-    // Add special properties for certain realms
     if (currentRealm === 'ice' || currentRealm === 'crystal') {
       mat.transparent = true;
       mat.opacity = 0.85;
     }
-
     return mat;
-  }, [config.groundColor, config.ambientColor, currentRealm]);
+  }, [config.ambientColor, currentRealm]);
 
   // Cleanup on unmount
   useEffect(() => {
