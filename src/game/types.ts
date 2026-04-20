@@ -213,4 +213,5 @@ export interface GameStats {
   maxHealth: number;
   attackPower: number;
   realmsVisited: Set<Realm>;
+  score: number;
 }
