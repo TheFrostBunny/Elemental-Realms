@@ -7,7 +7,7 @@ import {
   wasmMovePlayer, wasmPlayerAttack, wasmTick, wasmGetState, wasmDrainEvents,
   WasmGameState, GameEvent,
 } from './wasmBridge';
-import { PORTAL_POSITIONS } from './Portals';
+import { PORTAL_POSITIONS } from './portalPositions';
 
 export type GameScreen = 'menu' | 'playing' | 'gameover' | 'loading';
 

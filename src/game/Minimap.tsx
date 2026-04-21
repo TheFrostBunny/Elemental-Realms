@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Realm, Element, ELEMENTS, REALM_CONFIGS, ALL_REALMS, EnemyData } from './types';
-import { PORTAL_POSITIONS } from './Portals';
+import { PORTAL_POSITIONS } from './portalPositions';
 
 interface MinimapProps {
   playerX: number;
