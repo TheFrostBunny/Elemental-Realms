@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Element, Realm, GameStats, REALM_CONFIGS, REALM_BASE_ELEMENT } from './types';
 import { AttackEffect } from './CombatEffects';
 import { audioManager } from './audio';
+import { computeScore, addHighScore } from './highScores';
 import {
   initializeWasm, isWasmReady, wasmInitGame, wasmSwitchElement,
   wasmMovePlayer, wasmPlayerAttack, wasmTick, wasmGetState, wasmDrainEvents,
@@ -55,7 +56,7 @@ export function useGameState() {
     activeElement: 'fire',
     health: 100,
     currentRealm: 'fire',
-    stats: { kills: 0, xp: 0, level: 1, xpToNext: 80, maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire'] as Realm[]) },
+    stats: { kills: 0, xp: 0, level: 1, xpToNext: 80, maxHealth: 100, attackPower: 20, realmsVisited: new Set(['fire'] as Realm[]), score: 0 },
   });
 
   const [combatHud, setCombatHud] = useState({
@@ -76,6 +77,9 @@ export function useGameState() {
   const setCombatHudRef = useRef(setCombatHud);
   setCombatHudRef.current = setCombatHud;
   screenRef.current = screen;
+
+  // Last score info for game over screen
+  const lastScoreRef = useRef<{ score: number; rank: number }>({ score: 0, rank: 0 });
 
   // Combat state (mutable ref for frame-loop performance)
   const combatRef = useRef<CombatState>({
@@ -130,14 +134,20 @@ export function useGameState() {
           setTimeout(() => setNotification(null), 2000);
           break;
         case 'GameOver': {
-          const score = hudState.stats.score;
-          const best = Number(localStorage.getItem('bestScore') || '0');
-          if (!best || score > best) {
-            localStorage.setItem('bestScore', score.toString());
-          }
-        }
+          const s = hudState.stats;
+          const finalScore = computeScore(s.kills, s.level, s.realmsVisited.size);
+          const result = addHighScore({
+            score: finalScore,
+            level: s.level,
+            kills: s.kills,
+            realms: s.realmsVisited.size,
+            date: new Date().toISOString(),
+          });
+          lastScoreRef.current = { score: finalScore, rank: result.rank };
+          audioManager.playSfx('gameOver');
           setTimeout(() => setScreen('gameover'), 500);
           break;
+        }
       }
     }
   }, []);
@@ -372,6 +382,7 @@ export function useGameState() {
           maxHealth: state.playerMaxHealth,
           attackPower: state.playerAttackPower,
           realmsVisited: state.realmsVisited,
+          score: computeScore(state.playerKills, state.playerLevel, state.realmsVisited.size),
         },
       });
 
@@ -415,6 +426,7 @@ export function useGameState() {
         maxHealth: initialState.playerMaxHealth,
         attackPower: initialState.playerAttackPower,
         realmsVisited: initialState.realmsVisited,
+        score: 0,
       },
     });
     setScreen('playing');
@@ -456,5 +468,6 @@ export function useGameState() {
     tickGame,
     combatHud,
     combatRef,
+    lastScoreRef,
   };
 }

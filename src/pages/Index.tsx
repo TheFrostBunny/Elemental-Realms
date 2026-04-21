@@ -12,7 +12,7 @@ const Index = () => {
     screen, activeElement, health, currentRealm, stats,
     damageFlash, levelUpFlash, notification,
     startGame, backToMenu, wasmStateRef, tickGame,
-    combatHud, combatRef,
+    combatHud, combatRef, lastScoreRef,
   } = useGameState();
 
   if (screen === 'menu') {
@@ -35,7 +35,7 @@ const Index = () => {
   if (screen === 'gameover') {
     return <>
       <GameAudioManager gameState="gameover" />
-      <GameOverScreen stats={stats} onRestart={startGame} onMenu={backToMenu} />
+      <GameOverScreen stats={stats} lastScore={lastScoreRef.current} onRestart={startGame} onMenu={backToMenu} />
       <InGameSettingsDialog />
     </>;
   }

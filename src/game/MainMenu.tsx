@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ELEMENTS, Element } from './types';
 import { audioManager } from './audio';
+import { getHighScores } from './highScores';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -9,7 +10,8 @@ interface MainMenuProps {
 export function MainMenu({ onStart }: MainMenuProps) {
   const [visible, setVisible] = useState(false);
   const [hoveredEl, setHoveredEl] = useState<Element | null>(null);
-  const { unlock, playSfx } = useAudioManager();
+  const [showScores, setShowScores] = useState(false);
+  const highScores = getHighScores();
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
@@ -24,20 +26,7 @@ export function MainMenu({ onStart }: MainMenuProps) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
-      <GameAudioManager gameState="menu" />
-      
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <GameScene
-          activeElement={activeElement}
-          currentRealm={currentRealm}
-          wasmStateRef={wasmStateRef}
-          tickGame={tickGame}
-          combatRef={combatRef}
-        />
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      </div>
-
+    <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-background">
       <div
         className="relative z-10 flex flex-col items-center gap-8 md:gap-12 transition-all duration-1000 w-full max-w-2xl px-4 md:px-0"
         style={{
@@ -92,13 +81,65 @@ export function MainMenu({ onStart }: MainMenuProps) {
           })}
         </div>
 
-        {/* Features list */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-2 text-[9px] sm:text-[10px] md:text-[11px] font-body text-muted-foreground/70 w-full max-w-md">
-          <span>⚔ Dynamic combat with elemental weaknesses</span>
-          <span>🌍 4 unique realms to explore</span>
-          <span>📈 Level up and grow stronger</span>
-          <span>✨ Collect shards, orbs, and health</span>
-        </div>
+        {/* High Scores / Features toggle */}
+        {!showScores ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-2 text-[9px] sm:text-[10px] md:text-[11px] font-body text-muted-foreground/70 w-full max-w-md">
+              <span>⚔ Dynamic combat with elemental weaknesses</span>
+              <span>🌍 8 unique realms to explore</span>
+              <span>📈 Level up and grow stronger</span>
+              <span>✨ Collect shards, orbs, and health</span>
+            </div>
+            {highScores.length > 0 && (
+              <button
+                onClick={() => setShowScores(true)}
+                className="text-[10px] font-body text-muted-foreground/50 hover:text-primary/80 transition-colors uppercase tracking-widest"
+              >
+                🏆 View Leaderboard ({highScores.length})
+              </button>
+            )}
+          </>
+        ) : (
+          <div className="w-full max-w-[340px] animate-in fade-in duration-300">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display text-sm tracking-[0.2em] uppercase text-muted-foreground">
+                🏆 Leaderboard
+              </h3>
+              <button
+                onClick={() => setShowScores(false)}
+                className="text-[9px] font-body text-muted-foreground/50 hover:text-foreground transition-colors"
+              >
+                ✕ Close
+              </button>
+            </div>
+            <div className="bg-card/30 rounded-xl border border-border/40 overflow-hidden">
+              <table className="w-full text-[11px] font-body">
+                <thead>
+                  <tr className="border-b border-border/30 text-muted-foreground/70">
+                    <th className="px-3 py-2 text-left">#</th>
+                    <th className="px-3 py-2 text-right">Score</th>
+                    <th className="px-3 py-2 text-right">Lv</th>
+                    <th className="px-3 py-2 text-right">Kills</th>
+                    <th className="px-3 py-2 text-right">Realms</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {highScores.map((entry, i) => (
+                    <tr key={i} className="border-b border-border/20 text-muted-foreground hover:bg-card/40 transition-colors">
+                      <td className="px-3 py-1.5 text-left">
+                        {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`}
+                      </td>
+                      <td className="px-3 py-1.5 text-right font-display">{entry.score.toLocaleString()}</td>
+                      <td className="px-3 py-1.5 text-right">{entry.level}</td>
+                      <td className="px-3 py-1.5 text-right">{entry.kills}</td>
+                      <td className="px-3 py-1.5 text-right">{entry.realms}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         <button
           onClick={onStartClick}
