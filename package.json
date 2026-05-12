@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "tauri": "tauri dev"
+    "tauri": "tauri build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
