@@ -5,58 +5,76 @@ import { Realm, REALM_CONFIGS } from './types';
 
 
 // Terrain generation constants
-const TERRAIN_SIZE = 50;
-const TERRAIN_SEGMENTS = 40;
-const NOISE_SCALE = 0.3;
-const TERRAIN_HEIGHT_MULTIPLIER = 0.8;
+const TERRAIN_SIZE = 60; // Increased size slightly
+const TERRAIN_SEGMENTS = 64; // Increased resolution for better detail
+const TERRAIN_HEIGHT_MULTIPLIER = 1.2;
 
 // Animation constants
 const FLOATING_ISLAND_ROTATION_SPEED = 0.015;
 const ISLAND_COUNT = 8;
 const BASE_ISLAND_RADIUS = 7;
-const MAX_ISLAND_DISTANCE = 15;
+const MAX_ISLAND_DISTANCE = 18;
 
 // Decoration constants
-const DECORATION_COUNT = 12;
-const MIN_DECORATION_DISTANCE = 7;
-const MAX_DECORATION_DISTANCE = 15;
+const DECORATION_COUNT = 15;
+const MIN_DECORATION_DISTANCE = 8;
+const MAX_DECORATION_DISTANCE = 18;
 
 interface TerrainProps {
   currentRealm: Realm;
 }
 
-
-
-// Enkel pseudo-støy for terreng (erstatter simplex-noise)
-function generateNoise(x: number, z: number): number {
-  // Kombiner flere trig-funksjoner for "fleroktav" effekt
-  const base = Math.sin(x * 0.13 + z * 0.11) * 0.7;
-  const detail = Math.sin(x * 0.7 + 2) * Math.cos(z * 0.5 + 1.5) * 0.3;
-  const micro = Math.sin(x * 1.9 + z * 1.7) * 0.12;
-  return base + detail + micro;
+// Improved Fractional Brownian Motion (FBM) noise
+function fbm(x: number, z: number, octaves: number = 4): number {
+  let value = 0;
+  let amplitude = 0.5;
+  let frequency = 0.1;
+  
+  for (let i = 0; i < octaves; i++) {
+    // Using a more varied pseudo-random noise base
+    value += amplitude * (
+      Math.sin(x * frequency + i * 1.5) * 
+      Math.cos(z * frequency + i * 2.1) + 
+      Math.sin(x * frequency * 0.5 + z * frequency * 0.8) * 0.5
+    );
+    frequency *= 2.2;
+    amplitude *= 0.45;
+  }
+  return value;
 }
 
-// Realm-specific height modifications
+// Realm-specific height modifications with more character
 function applyRealmModifications(baseHeight: number, realm: Realm, x: number, z: number): number {
+  const d = Math.sqrt(x*x + z*z) / (TERRAIN_SIZE / 2); // Normalized distance from center
+  const edgeSoftening = Math.pow(1.0 - Math.min(1.0, d), 0.5);
+
   switch (realm) {
     case 'ice':
-      return baseHeight * 0.4; // Flatter icy terrain
+      return baseHeight * 0.3 * edgeSoftening; // Very flat, frozen plains
     case 'crystal':
-      return Math.abs(baseHeight) * 1.5 + Math.sin(x * 3) * 0.2; // Spiky crystals with extra detail
+      // Spiky, sharp formations
+      const crystalNoise = Math.pow(Math.abs(fbm(x * 2, z * 2, 2)), 0.5);
+      return (baseHeight * 0.5 + crystalNoise * 1.5) * edgeSoftening;
     case 'shadow':
-      return baseHeight * 0.2 - 0.1; // Nearly flat void, slightly depressed
+      return (baseHeight * 0.1 - 0.2) * edgeSoftening; // Sunken, dark void
     case 'lightning':
-      return baseHeight + Math.sin(x * 2) * 0.3 + Math.cos(z * 2.5) * 0.2; // Jagged peaks
+      // Jagged, extreme peaks
+      const jagged = Math.abs(fbm(x * 0.5, z * 0.5, 5)) * 2.5;
+      return (baseHeight * 0.5 + jagged) * edgeSoftening;
     case 'water':
-      return baseHeight * 0.6 + Math.sin(x * 0.8) * Math.sin(z * 0.8) * 0.3; // Gentle waves
+      // Rolling hills that look like waves
+      return (baseHeight * 0.8 + Math.sin(x * 0.4) * Math.cos(z * 0.4) * 0.6) * edgeSoftening;
     case 'fire':
-      return baseHeight * 1.2 + Math.abs(Math.sin(x * 1.5)) * 0.4; // Volcanic ridges
+      // Volcanic ridges with sharp drops
+      const volcano = Math.max(0, fbm(x * 0.2, z * 0.2, 3)) * 2.0;
+      return (baseHeight * 1.5 + volcano) * edgeSoftening;
     case 'earth':
-      return baseHeight * 0.9 + (Math.random() - 0.5) * 0.1; // Natural variation
+      return (baseHeight * 1.2 + fbm(x * 0.8, z * 0.8, 2) * 0.3) * edgeSoftening;
     case 'air':
-      return baseHeight * 0.7 + Math.sin(x * 0.4 + z * 0.4) * 0.5; // Flowing patterns
+      // Floating, wispy terrain
+      return (baseHeight * 0.6 + Math.sin(x * 0.3 + z * 0.3) * 1.0) * edgeSoftening;
     default:
-      return baseHeight;
+      return baseHeight * edgeSoftening;
   }
 }
 
@@ -64,74 +82,106 @@ export function Terrain({ currentRealm }: TerrainProps) {
   const config = REALM_CONFIGS[currentRealm];
   const geometryRef = useRef<THREE.PlaneGeometry | null>(null);
 
-
   const geometry = useMemo(() => {
     if (geometryRef.current) geometryRef.current.dispose();
     const geo = new THREE.PlaneGeometry(TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_SEGMENTS, TERRAIN_SEGMENTS);
     const pos = geo.attributes.position;
-    // Legg til vertex colors for varierende bakke
     const colors = [];
+    
+    // Create a temporary vector for normal calculations
+    const normal = new THREE.Vector3();
+    
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
-      const z = pos.getY(i);
-      const baseHeight = generateNoise(x, z) * TERRAIN_HEIGHT_MULTIPLIER;
-      const finalHeight = applyRealmModifications(baseHeight, currentRealm, x, z);
+      const y = pos.getY(i);
+      const baseHeight = fbm(x, y, 4) * TERRAIN_HEIGHT_MULTIPLIER;
+      const finalHeight = applyRealmModifications(baseHeight, currentRealm, x, y);
       pos.setZ(i, finalHeight);
+    }
+    
+    // Compute normals first to use for slope-based coloring
+    geo.computeVertexNormals();
+    const normals = geo.attributes.normal;
 
-      // Farge basert på høyde og realm
+    for (let i = 0; i < pos.count; i++) {
+      const finalHeight = pos.getZ(i);
+      normal.set(normals.getX(i), normals.getY(i), normals.getZ(i));
+      const slope = 1.0 - normal.z; // Higher value means steeper slope (since Z is up in PlaneGeometry before rotation)
+
       let color = new THREE.Color(config.groundColor);
-      if (finalHeight > 0.7) {
-        // Høyere topper får lysere farge
-        color.offsetHSL(0, -0.1, 0.18);
-      } else if (finalHeight < -0.5) {
-        // Daler får mørkere farge
-        color.offsetHSL(0, -0.05, -0.15);
-      } else if (currentRealm === 'ice') {
-        color.lerp(new THREE.Color('#b3e6ff'), 0.4);
-      } else if (currentRealm === 'fire' && finalHeight > 0.3) {
-        color.lerp(new THREE.Color('#ffb347'), 0.3);
-      } else if (currentRealm === 'earth' && finalHeight > 0.2) {
-        color.lerp(new THREE.Color('#44ff00'), 0.2);
-      } else if (currentRealm === 'crystal' && finalHeight > 0.5) {
-        color.lerp(new THREE.Color('#ff44ff'), 0.3);
+      
+      // Slope-based coloring (rocky cliffs)
+      if (slope > 0.4) {
+        color.lerp(new THREE.Color('#555555'), Math.min(1, (slope - 0.4) * 2));
       }
+
+      // Height-based variations
+      if (finalHeight > 1.5) {
+        color.offsetHSL(0, -0.1, 0.2); // Peaks
+      } else if (finalHeight < -0.8) {
+        color.offsetHSL(0, -0.1, -0.2); // Valleys
+      }
+
+      // Realm-specific detail coloring
+      if (currentRealm === 'ice') {
+        color.lerp(new THREE.Color('#e0f7ff'), 0.3);
+      } else if (currentRealm === 'fire' && finalHeight > 0.8) {
+        color.lerp(new THREE.Color('#ff4400'), 0.5); // Lava-like peaks
+      } else if (currentRealm === 'earth' && slope < 0.3) {
+        color.lerp(new THREE.Color('#2d5a27'), 0.4); // Grassier flat areas
+      } else if (currentRealm === 'crystal') {
+        color.offsetHSL(Math.sin(finalHeight) * 0.1, 0.2, 0.1);
+      }
+      
       colors.push(color.r, color.g, color.b);
     }
+    
     geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    geo.computeVertexNormals();
     geometryRef.current = geo;
     return geo;
-  }, [currentRealm]);
+  }, [currentRealm, config.groundColor]);
 
-  // Materiale med vertexColors
   const material = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
       vertexColors: true,
-      roughness: currentRealm === 'ice' ? 0.1 : currentRealm === 'crystal' ? 0.05 : 0.9,
-      metalness: currentRealm === 'crystal' || currentRealm === 'lightning' ? 0.8 : 0.1,
+      roughness: currentRealm === 'ice' ? 0.05 : currentRealm === 'crystal' ? 0.1 : 0.8,
+      metalness: currentRealm === 'crystal' || currentRealm === 'lightning' ? 0.4 : 0.0,
       emissive: config.ambientColor,
-      emissiveIntensity: 0.05,
+      emissiveIntensity: 0.1,
     });
-    if (currentRealm === 'ice' || currentRealm === 'crystal') {
-      mat.transparent = true;
-      mat.opacity = 0.85;
-    }
     return mat;
   }, [config.ambientColor, currentRealm]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (geometryRef.current) {
-        geometryRef.current.dispose();
-      }
+      if (geometryRef.current) geometryRef.current.dispose();
       material.dispose();
     };
   }, [material]);
 
   return (
-    <mesh geometry={geometry} material={material} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-    </mesh>
+    <group>
+      <mesh 
+        geometry={geometry} 
+        material={material} 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        receiveShadow 
+      />
+      
+      {/* Water / Floor plane for specific realms */}
+      {(currentRealm === 'water' || currentRealm === 'ice' || currentRealm === 'shadow') && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
+          <planeGeometry args={[TERRAIN_SIZE, TERRAIN_SIZE]} />
+          <meshStandardMaterial 
+            color={currentRealm === 'water' ? '#004488' : currentRealm === 'ice' ? '#88ccff' : '#050010'}
+            transparent
+            opacity={0.6}
+            roughness={0.1}
+            metalness={0.5}
+          />
+        </mesh>
+      )}
+    </group>
   );
 }
 
@@ -139,49 +189,47 @@ export function FloatingIslands({ currentRealm }: { currentRealm: Realm }) {
   const groupRef = useRef<THREE.Group>(null);
   const config = REALM_CONFIGS[currentRealm];
 
-  // Enhanced animation with floating motion
   useFrame((state, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * FLOATING_ISLAND_ROTATION_SPEED;
-      // Add subtle vertical floating motion
-      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
     }
   });
 
   const islands = useMemo(() => {
-    const islandPositions: Array<[number, number, number]> = [];
+    const islandPositions: Array<[number, number, number, number]> = [];
     
     for (let i = 0; i < ISLAND_COUNT; i++) {
       const angle = (i / ISLAND_COUNT) * Math.PI * 2;
-      // Use better distribution
       const distance = BASE_ISLAND_RADIUS + ((i * 7919) % 100) / 100 * (MAX_ISLAND_DISTANCE - BASE_ISLAND_RADIUS);
       const x = Math.cos(angle) * distance;
       const z = Math.sin(angle) * distance;
-      const y = (4 + ((i * 1337) % 100) / 100 * 4) * config.gravity;
+      const y = (5 + ((i * 1337) % 100) / 100 * 6) * config.gravity;
+      const scale = 0.6 + ((i * 4127) % 100) / 100 * 1.2;
       
-      islandPositions.push([x, y, z]);
+      islandPositions.push([x, y, z, scale]);
     }
     
     return islandPositions;
   }, [config.gravity]);
 
-  const islandGeometry = useMemo(() => new THREE.DodecahedronGeometry(0.5, 0), []);
+  const islandGeometry = useMemo(() => new THREE.DodecahedronGeometry(1, 0), []);
   
   const islandMaterial = useMemo(() => new THREE.MeshStandardMaterial({
     color: config.groundColor,
-    roughness: 0.7,
+    roughness: 0.8,
     emissive: config.ambientColor,
     emissiveIntensity: 0.2,
-    metalness: currentRealm === 'crystal' || currentRealm === 'lightning' ? 0.6 : 0.1,
+    metalness: currentRealm === 'crystal' || currentRealm === 'lightning' ? 0.5 : 0.1,
   }), [config.groundColor, config.ambientColor, currentRealm]);
 
   return (
     <group ref={groupRef}>
-      {islands.map(([x, y, z], i) => (
+      {islands.map(([x, y, z, scale], i) => (
         <mesh 
           key={i} 
           position={[x, y, z]} 
-          scale={0.8 + (i * 0.15)}
+          scale={scale}
           geometry={islandGeometry}
           material={islandMaterial}
           castShadow
@@ -191,14 +239,14 @@ export function FloatingIslands({ currentRealm }: { currentRealm: Realm }) {
   );
 }
 
-// Decoration creation functions for each realm
+// Decoration creation functions
 const createFireDecoration = (scale: number) => (
   <mesh position={[0, scale / 2, 0]} castShadow>
     <coneGeometry args={[0.3, scale, 6]} />
     <meshStandardMaterial 
       color="#4a1a0a" 
       emissive="#ff4400" 
-      emissiveIntensity={0.15} 
+      emissiveIntensity={0.3} 
       roughness={0.8} 
     />
   </mesh>
@@ -210,30 +258,36 @@ const createWaterDecoration = (scale: number) => (
     <meshStandardMaterial 
       color="#1a4a6a" 
       emissive="#0088ff" 
-      emissiveIntensity={0.2} 
+      emissiveIntensity={0.4} 
       transparent 
-      opacity={0.7} 
-      roughness={0.2} 
+      opacity={0.8} 
+      roughness={0.1} 
     />
   </mesh>
 );
 
 const createEarthDecoration = (scale: number) => (
-  <mesh position={[0, scale * 0.4, 0]} castShadow>
-    <cylinderGeometry args={[0.1, 0.15, scale * 0.8, 5]} />
-    <meshStandardMaterial color="#2a4a1a" roughness={0.95} />
-  </mesh>
+  <group>
+    <mesh position={[0, scale * 0.4, 0]} castShadow>
+      <cylinderGeometry args={[0.05, 0.1, scale * 0.8, 5]} />
+      <meshStandardMaterial color="#3d2b1f" roughness={0.9} />
+    </mesh>
+    <mesh position={[0, scale * 0.8, 0]} castShadow>
+      <sphereGeometry args={[scale * 0.3, 8, 8]} />
+      <meshStandardMaterial color="#2a4a1a" roughness={1.0} />
+    </mesh>
+  </group>
 );
 
 const createAirDecoration = (scale: number) => (
   <mesh position={[0, scale, 0]}>
-    <sphereGeometry args={[0.2 + scale * 0.1, 8, 8]} />
+    <sphereGeometry args={[0.2 + scale * 0.2, 12, 12]} />
     <meshStandardMaterial 
-      color="#8899aa" 
+      color="#ffffff" 
       emissive="#aabbcc" 
-      emissiveIntensity={0.3} 
+      emissiveIntensity={0.5} 
       transparent 
-      opacity={0.4} 
+      opacity={0.3} 
     />
   </mesh>
 );
@@ -243,21 +297,21 @@ const createShadowDecoration = (scale: number) => (
     <mesh position={[0, scale * 0.5, 0]}>
       <octahedronGeometry args={[0.3 + scale * 0.2, 0]} />
       <meshStandardMaterial 
-        color="#1a0030" 
-        emissive="#8b00ff" 
-        emissiveIntensity={0.4} 
+        color="#000000" 
+        emissive="#4b0082" 
+        emissiveIntensity={0.6} 
         transparent 
-        opacity={0.6} 
+        opacity={0.7} 
       />
     </mesh>
     <mesh position={[0, 0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <ringGeometry args={[0.5, 0.8 + scale * 0.3, 6]} />
+      <ringGeometry args={[0.5, 1.2 + scale * 0.5, 8]} />
       <meshStandardMaterial 
-        color="#2a0050" 
+        color="#1a0030" 
         emissive="#6600aa" 
-        emissiveIntensity={0.3} 
+        emissiveIntensity={0.4} 
         transparent 
-        opacity={0.3} 
+        opacity={0.2} 
         side={THREE.DoubleSide} 
       />
     </mesh>
@@ -267,21 +321,20 @@ const createShadowDecoration = (scale: number) => (
 const createLightningDecoration = (scale: number, seed: number) => (
   <group>
     <mesh position={[0, scale * 0.6, 0]} castShadow>
-      <cylinderGeometry args={[0.05, 0.2, scale * 1.2, 4]} />
+      <cylinderGeometry args={[0.02, 0.1, scale * 1.2, 4]} />
       <meshStandardMaterial 
-        color="#3a3a50" 
+        color="#222233" 
         emissive="#ffff00" 
-        emissiveIntensity={0.5} 
-        metalness={0.8} 
-        roughness={0.2} 
+        emissiveIntensity={0.8} 
+        metalness={1.0} 
       />
     </mesh>
     <mesh position={[0, scale * 1.2, 0]}>
-      <sphereGeometry args={[0.12, 8, 8]} />
+      <dodecahedronGeometry args={[0.15, 0]} />
       <meshStandardMaterial 
-        color="#ffff44" 
+        color="#ffff88" 
         emissive="#ffff00" 
-        emissiveIntensity={1.0} 
+        emissiveIntensity={1.5} 
       />
     </mesh>
   </group>
@@ -289,26 +342,16 @@ const createLightningDecoration = (scale: number, seed: number) => (
 
 const createIceDecoration = (scale: number, seed: number) => (
   <group>
-    <mesh position={[0, scale * 0.4, 0]} castShadow rotation={[0, seed * 0.8, 0.1]}>
-      <boxGeometry args={[0.3, scale * 0.8, 0.2]} />
+    <mesh position={[0, scale * 0.5, 0]} castShadow rotation={[0.2, seed, 0.1]}>
+      <boxGeometry args={[0.2, scale, 0.2]} />
       <meshStandardMaterial 
-        color="#88ccee" 
-        emissive="#44aadd" 
-        emissiveIntensity={0.15} 
+        color="#b3e6ff" 
+        emissive="#00bbff" 
+        emissiveIntensity={0.3} 
         transparent 
-        opacity={0.7} 
-        metalness={0.3} 
-        roughness={0.1} 
-      />
-    </mesh>
-    <mesh position={[0.15, scale * 0.3, 0.1]} castShadow rotation={[0.2, seed, -0.15]}>
-      <boxGeometry args={[0.15, scale * 0.5, 0.12]} />
-      <meshStandardMaterial 
-        color="#aaddff" 
-        emissive="#88ddff" 
-        emissiveIntensity={0.1} 
-        transparent 
-        opacity={0.6} 
+        opacity={0.8} 
+        metalness={0.2} 
+        roughness={0.0} 
       />
     </mesh>
   </group>
@@ -317,23 +360,13 @@ const createIceDecoration = (scale: number, seed: number) => (
 const createCrystalDecoration = (scale: number, seed: number) => (
   <group>
     <mesh position={[0, scale * 0.5, 0]} castShadow rotation={[0.1, seed * 1.2, 0.15]}>
-      <coneGeometry args={[0.2, scale, 5]} />
+      <coneGeometry args={[0.25, scale, 4]} />
       <meshStandardMaterial 
-        color="#cc22cc" 
-        emissive="#ff44ff" 
-        emissiveIntensity={0.4} 
+        color="#ff00ff" 
+        emissive="#ff00ff" 
+        emissiveIntensity={0.6} 
         metalness={0.9} 
-        roughness={0.05} 
-      />
-    </mesh>
-    <mesh position={[-0.2, scale * 0.3, 0.1]} castShadow rotation={[-0.2, seed * 0.7, -0.3]}>
-      <coneGeometry args={[0.12, scale * 0.6, 5]} />
-      <meshStandardMaterial 
-        color="#aa11aa" 
-        emissive="#dd33dd" 
-        emissiveIntensity={0.3} 
-        metalness={0.9} 
-        roughness={0.05} 
+        roughness={0.1} 
       />
     </mesh>
   </group>
@@ -353,7 +386,7 @@ export function RealmDecorations({ currentRealm }: { currentRealm: Realm }) {
       const dist = MIN_DECORATION_DISTANCE + ((i * 7919) % 100) / 100 * (MAX_DECORATION_DISTANCE - MIN_DECORATION_DISTANCE);
       items.push({
         pos: [Math.cos(angle) * dist, 0, Math.sin(angle) * dist],
-        scale: 0.5 + ((i * 3571) % 100) / 100 * 1.5,
+        scale: 0.8 + ((i * 3571) % 100) / 100 * 2.0,
         seed: i,
       });
     }
